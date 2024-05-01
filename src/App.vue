@@ -14,4 +14,7 @@ defineOptions({
     margin-right: auto;
     margin-left: auto;
   }
+  .nav-container .q-item.q-router-link--active{
+    color: #bcc9fe;
+  }
 </style>

@@ -85,11 +85,10 @@
     <q-drawer
       v-if="$q.screen.lt.md"
       v-model="leftDrawerOpen"
-      bordered
     >
       <q-list class="flex column q-gutter-y-sm">
         <!-- Выдвижная панель - загаловок -->
-        <q-item-label class="text-h5 text-primary list-title" header>
+        <q-item-label class="text-h5 text-white list-title" header>
           FANSYMAG
         </q-item-label>
 
@@ -190,8 +189,8 @@
     background: $main-gradient;
   }
   .list-title {
-    background: #8a8aff6b;
-    padding: 33px 15px;
+    background: $main-gradient;
+    padding: 34px 15px;
   }
   .list-item {
     transition: all 0.3s ease-in-out;
@@ -201,5 +200,9 @@
   }
   .active {
     background-color: #f5f5f5;
+  }
+  q-item:active {
+    background-color: lightblue; /* Изменяем цвет фона */
+    color: red; /* Изменяем цвет текста */
   }
 </style>
