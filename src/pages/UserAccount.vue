@@ -1,7 +1,6 @@
 <template>
   <div class="row q-mt-xl justify-center q-mr-lg q-ml-lg">
-    <div class="bg-secondary col-2 q-mr-lg items-stretch background-stroke">
-      <!-- поменять цвет на withe -->
+    <div class="bg-white col-2 q-mr-lg items-stretch background-stroke">
       <div class="text-center q-mt-lg">
         <q-avatar size="100px">
           <img src="https://cdn.quasar.dev/img/avatar.png" />
@@ -12,8 +11,7 @@
       </div>
     </div>
 
-    <div class="bg-secondary col-9 background-stroke q-pa-lg">
-      <!-- поменять цвет на withe -->
+    <div class="bg-white col-9 background-stroke q-pa-lg">
       <div class="text-h3 q-mb-xl">
         <span>Заказы</span>
       </div>
