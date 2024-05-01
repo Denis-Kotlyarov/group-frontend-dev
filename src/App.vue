@@ -17,4 +17,10 @@ defineOptions({
   .nav-container .q-item.q-router-link--active{
     color: #bcc9fe;
   }
+  .header-title .q-item.q-router-link--active{
+    color: white
+  }
+  .list-title .q-item.q-router-link--active{
+    color: white
+  }
 </style>

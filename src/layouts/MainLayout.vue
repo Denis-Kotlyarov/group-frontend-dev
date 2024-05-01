@@ -18,8 +18,8 @@
               class="q-mr-sm"
               @click="toggleLeftDrawer"
             />
-            <div v-if="$q.screen.gt.xs" class="text-h4"> 
-              FANSYMAG
+            <div v-if="$q.screen.gt.xs" class="text-h4 cursor-pointer header-title"> 
+              <q-item to="/" >FANSYMAG</q-item>
             </div>
           </div>
 
@@ -35,8 +35,7 @@
           <!-- Контейнер для навигационных иконок (скрываются на меньшем экране) -->
           <div class="flex items-center nav-container q-gutter-x-md" v-if="$q.screen.gt.sm">
             <q-item 
-              class="flex column items-center q-gutter-y-sm rounded-borders" 
-              :class="active ? 'active' : ''"
+              class="flex column items-center q-gutter-y-sm rounded-borders"
               clickable 
               v-ripple
               to='/user' 
@@ -89,7 +88,7 @@
       <q-list class="flex column q-gutter-y-sm">
         <!-- Выдвижная панель - загаловок -->
         <q-item-label class="text-h5 text-white list-title" header>
-          FANSYMAG
+          <q-item to="/">FANSYMAG</q-item>
         </q-item-label>
 
         <!-- Выдвижная панель - ссылки -->
@@ -200,9 +199,5 @@
   }
   .active {
     background-color: #f5f5f5;
-  }
-  q-item:active {
-    background-color: lightblue; /* Изменяем цвет фона */
-    color: red; /* Изменяем цвет текста */
   }
 </style>
