@@ -1,24 +1,13 @@
 <template>
-  <div 
-    class="row q-mt-xl justify-center q-mr-lg q-ml-lg main" 
-    :class="$q.screen.width <= 880 ? 'column wrap' : ''"
-  >
-    <div 
-      class="bg-white col q-mr-lg q-pa-sm items-stretch background-stroke user-profile"
-      :class="$q.screen.width <= 880 ? 'q-mb-lg' : ''"
-    >
-      <div 
-        class="text-center q-my-lg"
-        :class="$q.screen.width <= 880 ? 'flex flex-center q-gutter-x-lg wrap' : ''"
-      >
+  <div class="row q-mt-xl justify-center q-mr-lg q-ml-lg">
+    <div class="bg-white col-2 q-mr-lg items-stretch background-stroke">
+      <div class="text-center q-mt-lg">
         <q-avatar size="100px">
           <img src="https://cdn.quasar.dev/img/avatar.png" />
         </q-avatar>
-        <div>
-          <p class="text-h6" :class="$q.screen.width <= 880 ? 'q-mb-none' : ''">Юзер Юзерович</p>
-          <p class="text-h7" :class="$q.screen.width <= 880 ? 'q-mb-none' : ''">1234567890@mail.ru</p>
-          <q-btn class="q-mt-lg" color="primary" label="Редактировать" />
-        </div>
+        <p class="text-h6">Юзер Юзерович</p>
+        <p class="text-h7">1234567890@mail.ru</p>
+        <q-btn class="q-mt-lg" color="primary" label="Редактировать" />
       </div>
     </div>
 
@@ -31,26 +20,23 @@
         :key="i"
         class="bg-white q-mb-lg card-custom-style shadow-5"
       >
-        <div v-if="purchasedItem.length">
+        <div>
           <q-card-section class="row justify-between">
-            <div class="col">
-              <div 
-                class="row items-center no-wrap"
-                :class="$q.screen.width <= 660 ? 'justify-start column' : ''"
-              >
-                <div class="text-h6 col delivery-type">Доставка курьером</div>
-                <div
-                  class="text-subtitle2 col bg-positive text-center marker-received-style q-mr-sm"
-                  :class="$q.screen.width <= 660 ? 'q-my-sm q-px-lg' : ''"
-                >
-                  Получен
+            <div class="col-3">
+              <div class="row items-center no-wrap">
+                <div class="text-h6 col">Доставка курьером</div>
+                <div>
+                  <div
+                    class="text-subtitle2 col bg-positive text-center marker-received-style q-mr-sm"
+                  >
+                    Получен
+                  </div>
                 </div>
               </div>
-              <div class="text-subtitle2" :class="$q.screen.width <= 660 ? 'text-center' : ''">Дата покупки: 11.11.24</div>
+              <div class="text-subtitle2">Дата покупки: 11.11.24</div>
             </div>
-            <div class="col text-right">
+            <div class="col-7 text-right">
               <q-img
-                v-show="$q.screen.width >= 661"
                 class="img-custom-style"
                 src="https://loremflickr.com/640/360"
               />
@@ -59,24 +45,10 @@
                 src="https://loremflickr.com/640/360"
               />
             </div>
-            <div class="text-subtitle2 col-2 text-right" v-show="$q.screen.width >= 390">
+            <div class="text-subtitle2 col-2 text-right">
               Оплачено <span class="text-h6">1399р</span>
             </div>
           </q-card-section>
-        </div>
-      </div>
-      <div
-        v-if="!purchasedItem.length"
-        class="basket-pagebasket-empty basket-empty"
-      >
-        <div class="basket-emptywrap text-center">
-          <q-icon name="shopping_cart" size="6em" color="grey-5" />
-          <div class="basket-content_title text-h6">История заказов пуста</div>
-          <p class="q-pt-md">
-            Загляните на главную, чтобы выбрать товары или найдите нужное в
-            поиске
-          </p>
-          <q-btn to="/" color="positive" label="Перейти на главную" />
         </div>
       </div>
     </div>
@@ -88,18 +60,6 @@
 defineOptions({
   name: "UserAccount",
 });
-
-import { ref } from "vue"
-import { useQuasar } from 'quasar';
-const $q = useQuasar()
-
-const purchasedItem = ref([
-  {
-    id: 1,
-    price: 1000,
-    name: "Кроссовки",
-  },
-]);
 </script>
 
 <style lang="sass" scoped>
@@ -109,7 +69,7 @@ const purchasedItem = ref([
   border-radius: 20px
 
 .marker-received-style
-  max-width: 100px
+  width: 100px
   height: 20px
   border-radius: 20px
 
@@ -118,14 +78,5 @@ const purchasedItem = ref([
 
 .card-custom-style
   border-radius: 20px
-
-.delivery-type
-  max-width: 200px
-
-.user-profile
-  max-width: 300px
-
-@media (max-width: 880px) 
-  .user-profile
-    max-width: 1000px
 </style>
+
