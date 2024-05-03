@@ -1,6 +1,5 @@
 <template>
-
-<!-- ДЛЯ ТЕСТА ПРОТИ ПО АДРЕСУ: http://localhost:8080/#/popap -->
+  <!-- ДЛЯ ТЕСТА ПРОТИ ПО АДРЕСУ: http://localhost:8080/#/popap -->
 
   <!-- КНОПКИ ДЛЯ ОТОБРАЖЕНИЯ POPAP -->
   <div>
@@ -15,6 +14,12 @@
       class="q-mt-lg"
       color="primary"
       label="карточки"
+    />
+    <q-btn
+      @click="medium = true"
+      class="q-mt-lg"
+      color="primary"
+      label="карточки по поиску"
     />
   </div>
 
@@ -138,6 +143,13 @@
       </div>
     </div>
   </q-dialog>
+
+  <!-- POPAP ВЫДАЧА ТОВАРОВ ИЗ ПОИСКА -->
+  <q-dialog v-model="medium">
+    <q-card class="bg-white" style="width: 900px; max-width: 80vw">
+      <div>hello</div>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup>
@@ -182,44 +194,49 @@ let ProductDescription =
 if (ProductDescription.length > 800)
   ProductDescription = ProductDescription.slice(0, 1000) + "...";
 // КОНЕЦ POPAP КАРТОЧЕК ТОВАРОВ
+
+// POPAP ВЫДАЧА ТОВАРОВ ИЗ ПОИСКА
+const medium = ref(false);
 </script>
 
 <style lang="sass" scoped>
 //стили к pop-ap регистрации
 
 .pop-ap-registration-container
-    width: 513px
-    height: 700px
-    border-radius: 20px
+  width: 513px
+  height: 700px
+  border-radius: 20px
 
 .button-length
-    width: 100%
+  width: 100%
 
 //закончились стили к pop-ap
 
 //стили к pop-ap карточки товаров
 
 .general-box-for-pop-ap-product-cards
-    height: 90%
-    width: 100%
+  height: 90%
+  width: 100%
 
 .pop-up-product-card-container
-    height: 800px
-    border-radius: 50px
+  height: 800px
+  border-radius: 50px
 
 .img-pop-ap-product-cards
-    height: 90%
-    width: 90%
-    border-radius: 20px
+  height: 90%
+  width: 90%
+  border-radius: 20px
 .description-box
-    height: 80%
-    width: 100%
-    border-radius: 20px
+  height: 80%
+  width: 100%
+  border-radius: 20px
 .add-to-cart-box
-    height: 30%
-    width: 80%
-    border-radius: 20px
+  height: 30%
+  width: 80%
+  border-radius: 20px
 .title-box
-    height: 20%
-    width: 100%
+  height: 20%
+  width: 100%
+
+// POPAP ВЫДАЧА ТОВАРОВ ИЗ ПОИСКА 
 </style>

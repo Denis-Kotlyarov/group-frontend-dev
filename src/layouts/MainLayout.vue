@@ -24,14 +24,18 @@
           </div>
 
           <!-- Контейнер для поиска -->
-          <div class="q-px-md q-py-xs q-my-md q-mx-md bg-white col search-container">
-            <q-input borderless bg-color="white" placeholder="Поиск" v-model="text" class="text-black text-body1" color="black">
+          <div class="q-px-md q-py-xs q-my-md q-mx-md bg-white col search-container popup-z">
+            <q-input borderless bg-color="white" placeholder="Поиск" v-model="text" class="text-black text-body1 popup-z" color="black" @click="popup=true">
               <template v-slot:append>
                 <q-btn round dense flat icon="search" />
               </template>
+              <!-- popua для поиска -------------------------------------------------------------------------------------------->
             </q-input>
+            <div class="bg-white popup" v-if="popup">
+            <!-- сюда контент отфильтрованный с поиска -->
+            </div>
+            <div class="popup-bg" v-if="popup" @click="popup=false"></div>
           </div>
-
           <!-- Контейнер для навигационных иконок (скрываются на меньшем экране) -->
           <div class="flex items-center nav-container q-gutter-x-md" v-if="$q.screen.gt.sm">
             <q-item 
@@ -169,6 +173,7 @@
   const $q = useQuasar()
   const $route = useRoute()
   const leftDrawerOpen = ref(false)
+  const popup = ref(false)
 
   function toggleLeftDrawer () {
     leftDrawerOpen.value = !leftDrawerOpen.value
@@ -179,6 +184,28 @@
   .search-container {
     width: 48%;
     border-radius: 20px;
+    position: relative;
+  }
+  .popup {
+    position: absolute;
+    left: 0;
+    top:80px;
+    padding: 12px;
+    height: 698px;
+    width: 100%;
+    border-radius: 20px;
+    z-index: 1000;
+  }
+  .popup-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.2)
+  }
+  .popup-z{
+    z-index: 1001;
   }
   .wrapper {
     max-width: 1440px;
@@ -199,5 +226,8 @@
   }
   .active {
     background-color: #f5f5f5;
+  }
+  .footer{
+    z-index: 999;
   }
 </style>
