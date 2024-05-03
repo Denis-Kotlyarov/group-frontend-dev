@@ -34,7 +34,7 @@
             <div class="bg-white popup" v-if="popup">
             <!-- сюда контент отфильтрованный с поиска -->
             </div>
-            <div class="popup-bg" v-if="popup" @click="popup=false"></div>
+            
           </div>
           <!-- Контейнер для навигационных иконок (скрываются на меньшем экране) -->
           <div class="flex items-center nav-container q-gutter-x-md" v-if="$q.screen.gt.sm">
@@ -80,6 +80,7 @@
               </q-item-label>
             </q-item>
           </div>
+          <div class="popup-bg" v-if="popup" @click="popup=false"></div>
         </q-toolbar>
       </div>
       
@@ -202,7 +203,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0,0,0,0.2)
+    background: rgba(0,0,0,0.2);
   }
   .popup-z{
     z-index: 1001;
