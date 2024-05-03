@@ -1,13 +1,6 @@
 <template>
     <div class="container">
-        <h6 v-if="true" class="q-mb-lg">Запрос который ввел пользователь в строке поиска...</h6>
-        <div v-if="$q.screen.width >= 880" class="btns-container flex q-gutter-x-md q-gutter-y-md q-mb-lg text-h3">
-            <q-btn label="По популярности" no-caps class="text-subtitle1"/>
-            <q-btn label="По цене" no-caps class="text-subtitle1"/>
-            <q-btn label="По наименованию" no-caps class="text-subtitle1"/>
-            <q-btn label="По типу товара" no-caps class="text-subtitle1"/>
-            <q-btn label="Сначала избранное" no-caps class="text-subtitle1"/>
-        </div>
+        <h6 v-if="true" class="q-mb-lg">Это компонент Избранное</h6>
 
         <q-select v-else standout v-model="model" :options="options" label="Фильтр" bg-color="secondary" color="black"/>
 
@@ -26,10 +19,9 @@
     const model = ref(null)
     const options = ref([
         'По популярности',
-        'По цене',
-        'По наименованию',
-        'По типу товара',
-        'Сначала избранное',
+        'По популярности',
+        'По популярности',
+        'По популярности',
     ])
 </script>
 

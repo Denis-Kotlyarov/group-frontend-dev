@@ -27,12 +27,12 @@
           <div class="q-px-md q-py-xs q-my-md q-mx-md bg-white col search-container popup-z">
             <q-input borderless bg-color="white" placeholder="Поиск" v-model="text" class="text-black text-body1 popup-z" color="black" @click="popup=true">
               <template v-slot:append>
-                <q-btn round dense flat icon="search" />
+                <q-btn round dense flat icon="search" clickable to='/'/>
               </template>
               <!-- popua для поиска -------------------------------------------------------------------------------------------->
             </q-input>
-            <div class="bg-white popup" v-if="popup">
-              <div class="flex flex-center q-gutter-x-md q-gutter-y-md q-mt-md">
+            <div class="bg-white seach-popup" v-if="popup">
+              <div class="flex flex-center q-gutter-x-md q-gutter-y-md q-mt-md" style="max-height: calc(100vh - 150px); overflow-y: auto; pointer-events: all;">
                 <card-component class="" v-for="n in 10" :key="n"/>
               </div>
             </div>
@@ -58,7 +58,7 @@
               class="flex column items-center q-gutter-y-sm rounded-borders" 
               clickable 
               v-ripple 
-              to="/404" 
+              to="/favpage" 
               avatar 
               exact
             >
@@ -234,5 +234,14 @@
   }
   .footer{
     z-index: 999;
+  }
+  .seach-popup {
+    position: absolute;
+    left: 0;
+    top:80px;
+    padding: 12px;
+    width: 100%;
+    border-radius: 20px;
+    z-index: 1000;
   }
 </style>

@@ -7,6 +7,8 @@ const routes = [
       { path: '/user', component: () => import('src/pages/UserAccount.vue') },
       { path: '/basket', component: () => import('src/pages/Basket.vue') },
       { path: '/popap', component: () => import('src/pages/PopAp.vue') },
+      { path: '/favpage', component: () => import('src/pages/FavPage.vue') },
+      { path: '/landing', component: () => import('src/pages/LandingPage.vue') }, //потом надо поменять на то чтобы это было стартовой
     ]
   },
 
