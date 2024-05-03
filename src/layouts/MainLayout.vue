@@ -154,7 +154,7 @@
       <div class="wrapper">
         <q-toolbar class="flex flex-center q-gutter-x-xs">
           <q-item class="flex column text-center q-pa-md">
-            <p>2004-2024 &#169 <b>FANSYMAG</b> - интернет-магазин. Все права защищены.</p>
+            <p>2004-2024 © <b>FANSYMAG</b> - интернет-магазин. Все права защищены.</p>
             <p class="text-caption q-mb-none">Доставка по всей России. На торговой площадке sitename.ru применяются рекомендательные технологии.</p>
             <p class="text-caption">Адрес для направления юридически значимых сообщений: <a href="mailto:sales@sitename.ru" class="text-white cursor-pointer">sales@sitename.ru</a></p>
           </q-item>
