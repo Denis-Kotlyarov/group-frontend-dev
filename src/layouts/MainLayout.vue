@@ -32,7 +32,9 @@
               <!-- popua для поиска -------------------------------------------------------------------------------------------->
             </q-input>
             <div class="bg-white popup" v-if="popup">
-            <!-- сюда контент отфильтрованный с поиска -->
+              <div class="flex flex-center q-gutter-x-md q-gutter-y-md q-mt-md">
+                <card-component class="" v-for="n in 10" :key="n"/>
+              </div>
             </div>
             
           </div>
@@ -166,6 +168,7 @@
   import { useQuasar } from 'quasar'
   import { ref } from 'vue'
   import { useRoute } from 'vue-router'
+  import CardComponent from 'src/components/CardComponent.vue';
 
   defineOptions({
     name: 'MainLayout'
@@ -179,6 +182,7 @@
   function toggleLeftDrawer () {
     leftDrawerOpen.value = !leftDrawerOpen.value
   }
+  
 </script>
 
 <style scoped lang="scss">

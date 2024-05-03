@@ -3,10 +3,10 @@
     <img src="https://loremflickr.com/640/560" class="card-img">
 
     <q-card-section>
-      <div class="text-h6 q-pb-none">1.999₽</div>
+      <div class="my-card-text text-h6 q-pb-none">1.999₽</div>
     </q-card-section>
 
-    <q-card-section class="q-pt-none">
+    <q-card-section class="my-card-text q-pt-none">
       {{ lorem }}
     </q-card-section>
 
@@ -25,6 +25,9 @@
   .my-card
     width: 100%
     max-width: 280px
+
+  .my-card-text
+    color: black
 
   .card-img
     max-width: 280px
