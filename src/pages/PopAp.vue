@@ -30,12 +30,23 @@
     <div class="bg-white pop-ap-registration-container">
       <div class="text-center q-ma-xl">
         <p class="text-h2 text-primary">FANSYMAG</p>
-        <p class="text-h3">Введите почту и пароль</p>
+        <p class="text-h3">Введите своё имя, почту и пароль</p>
         <p class="text-h7 q-mt-md">
           Для авторизации на сервисе Вам необходимо ввести свою почту и пароль.
           Если вы еще не зарегистрированы, то вы можете создать аккаунт.
         </p>
         <q-form @submit="onSubmit" class="q-gutter-md q-mt-md">
+          <q-input
+            class="q-mb-md"
+            outlined
+            v-model="email"
+            label="Ведите своё имя"
+            lazy-rules
+            :rules="[
+              (val) =>
+                (val && val.length > 0) || 'Пожалуйста, напишите что-нибудь',
+            ]"
+          />
           <q-input
             class="q-mb-md"
             outlined
@@ -204,7 +215,7 @@ const medium = ref(false);
 
 .pop-ap-registration-container
   width: 513px
-  height: 700px
+  height: 800px
   border-radius: 20px
 
 .button-length
