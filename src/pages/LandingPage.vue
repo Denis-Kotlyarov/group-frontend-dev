@@ -91,6 +91,10 @@
         "
       />
     </div>
+
+    <Register/>
+    <SignIn/>
+
   </div>
 </template>
 
@@ -111,6 +115,10 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { db } from "src/firebase";
+import Register from "src/components/Register.vue";
+import SignIn from "src/components/SignIn.vue";
+// import App from "src/App.vue";
+// import {auth} from "src/App.vue";
 
 /**
  * firebase ref

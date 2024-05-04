@@ -158,6 +158,7 @@
             <p class="text-caption q-mb-none">Доставка по всей России. На торговой площадке sitename.ru применяются рекомендательные технологии.</p>
             <p class="text-caption">Адрес для направления юридически значимых сообщений: <a href="mailto:sales@sitename.ru" class="text-white cursor-pointer">sales@sitename.ru</a></p>
           </q-item>
+          <q-btn @click="handleSignOut" v-if="isLoggedIn">Выйти из аккаунта</q-btn>
         </q-toolbar>
       </div>
     </q-footer>
@@ -183,6 +184,35 @@
     leftDrawerOpen.value = !leftDrawerOpen.value
   }
   
+
+
+// -------- здесь код для проверки того залогинен юзер или нет
+import { onMounted } from 'vue';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+// import { useRouter } from 'vue-router'; // router is for signout redirect
+
+
+const isLoggedIn = ref(false);
+
+let auth;
+onMounted(() => {
+  auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+  if (user) {
+    isLoggedIn.value = true;
+    console.log('Юзер залогинен')
+  } else {
+    isLoggedIn.value = false;
+    console.log('Юзер НЕ! залогинен')
+  }
+  });
+});
+
+const handleSignOut = () =>{
+  signOut(auth).then(() =>{
+
+  });
+};
 </script>
 
 <style scoped lang="scss">
