@@ -27,7 +27,8 @@
                 <h4 class="text-weight-bold">Наши новинки</h4>
             </div>
             <div class="flex flex-center q-gutter-x-md q-gutter-y-md q-mt-md"> <!-- див с товарами -->
-                <card-component class="" v-for="n in 10" :key="n"/>
+                <h2 v-if="loading">Loading...</h2>
+                <card-component class="" v-for="n in 10" :key="n" v-else :books="books"/>
             </div>
         </div>
 
@@ -46,17 +47,36 @@
 <script setup>
     import CardComponent from 'src/components/CardComponent.vue';
     import { useQuasar } from 'quasar';
-    import { ref } from 'vue';
+    import { onMounted, ref } from 'vue';
+    import { collection, onSnapshot, addDoc, doc, deleteDoc, updateDoc, query, orderBy, limit } from "firebase/firestore";
+    import { db } from "src/firebase";
 
-    const $q = useQuasar()
-    const model = ref(null)
-    const options = ref([
-        'По популярности',
-        'По цене',
-        'По наименованию',
-        'По типу товара',
-        'Сначала избранное',
-    ])
+
+// //Генератор рандомных товаров @click="addTodo"
+// import { onMounted } from "vue";
+// 
+// 
+
+// function getRandomInt(max) {
+//   return Math.floor(Math.random() * max);
+// }
+
+// const todosCollectionRef = collection(db, "tovari");
+
+//   const addTodo = () => {
+//     addDoc(todosCollectionRef, 
+//     {
+//         type: 'mobile',
+//         name: 'Мобильник дубликат',
+//         seller: 'Продавец дубликат',
+//         description: 'Описание дубликат',
+//         price: getRandomInt(3000000),
+//         popularity: getRandomInt(300),
+//         imgURL: '',
+//         isFav: false,
+//     });
+// };
+
 </script>
 
 <style lang="scss" scoped>
