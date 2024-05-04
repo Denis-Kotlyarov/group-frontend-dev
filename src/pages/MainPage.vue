@@ -10,17 +10,35 @@
         </div>
 
         <q-select v-else standout v-model="model" :options="options" label="Фильтр" bg-color="secondary" color="black"/>
+    </div>
 
-        <div class="flex flex-center q-gutter-x-md q-gutter-y-md q-mt-md">
-            <card-component class="" v-for="n in 10" :key="n"/>
-        </div>
+    <div class="cont flex q-gutter-x-md q-gutter-y-md q-mt-md" :class="$q.screen.width <= 739 ? 'flex-center' : ''">
+        <card-component class="" v-for="tovar in data" :key="tovar.id" :tovar="tovar"/>
     </div>
 </template>
 
 <script setup>
     import CardComponent from 'src/components/CardComponent.vue';
     import { useQuasar } from 'quasar';
-    import { ref } from 'vue';
+    import { ref, onMounted } from 'vue';
+    import { db } from 'src/firebase';
+    import { collection, getDocs } from "firebase/firestore";
+
+    const data = ref([])
+
+    onMounted( async () => {
+        const querySnapshot = await getDocs(collection(db, "tovari"));
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            data.value.push(
+                {
+                    id: doc.id,
+                    ...doc.data()
+                }
+            )
+        });
+        console.log(data);
+    })
 
     const $q = useQuasar()
     const model = ref(null)
@@ -41,5 +59,9 @@
     .q-field--standout.q-field--highlighted .q-field__append,
     .q-field--standout.q-field--highlighted .q-field__input {
         color: inherit; /*inherit для наследования цвета текста */
+    }
+    .cont {
+        width: 80%;
+        margin: 0 auto;
     }
 </style>
