@@ -1,7 +1,7 @@
 <template>
   <q-card class="my-card">
     <div>
-      <img src="https://loremflickr.com/640/560" class="card-img rounded-borders">
+      <img :src="tovar.imgURL" class="card-img rounded-borders">
       <div class="bg-primary q-pa-xs favorite-icon-div"
       :class="favoriteToggler ? 'bg-secondary' : 'bg-primary'">
         <q-icon 
@@ -16,7 +16,7 @@
 
     <q-card-section>
       <div class="my-card-text text-h5 text-weight-bold q-pb-none">1.999₽</div>
-      <div class="my-card-text text-h6 text-weight-regular q-pb-none">{{ nameTrimmedText }}</div>
+      <div class="my-card-text text-h6 text-weight-regular q-pb-none">{{ tovar.name }}</div>
     </q-card-section>
 
     <!-- <q-card-section class="my-card-text q-pt-none">
@@ -46,6 +46,12 @@
   // let trimmedText = content.substring(0, trimSizeforItemDescr) + '...';
 
   let favoriteToggler = ref(false)
+
+  const props = defineProps({
+    tovar: {
+      type: Object
+    }
+  })
 </script>
 
 <style lang="sass" scoped>
