@@ -25,15 +25,16 @@
 
           <!-- Контейнер для поиска -->
           <div class="q-px-md q-py-xs q-my-md q-mx-md bg-white col search-container popup-z">
-            <q-input borderless bg-color="white" placeholder="Поиск" v-model="text" class="text-black text-body1 popup-z" color="black" @click="popup=true">
+            <q-input borderless bg-color="white" placeholder="Поиск" v-model="searchText" class="text-black text-body1 popup-z" color="black" @click="popup=true">
               <template v-slot:append>
                 <q-btn round dense flat icon="search" clickable to='/'/>
               </template>
-              <!-- popua для поиска -------------------------------------------------------------------------------------------->
             </q-input>
+
+            <!-- popua для поиска -------------------------------------------------------------------------------------------->
             <div class="bg-white seach-popup" v-if="popup">
               <div class="flex flex-center q-gutter-x-md q-gutter-y-md q-mt-md" style="max-height: calc(100vh - 150px); overflow-y: auto; pointer-events: all;">
-                <card-component class="" v-for="n in 10" :key="n"/>
+                <card-component class="" v-for="tovar in data" :key="tovar.id" :tovar="tovar"/>
               </div>
             </div>
             
@@ -82,7 +83,10 @@
               </q-item-label>
             </q-item>
           </div>
+
+          <!-- popua для поиска -------------------------------------------------------------------------------------------->
           <div class="popup-bg" v-if="popup" @click="popup=false"></div>
+
         </q-toolbar>
       </div>
       
@@ -166,9 +170,12 @@
 
 <script setup>
   import { useQuasar } from 'quasar'
-  import { ref } from 'vue'
+  import { ref, watch, onMounted } from 'vue'
   import { useRoute } from 'vue-router'
   import CardComponent from 'src/components/CardComponent.vue';
+
+  import { db } from 'src/firebase';
+  import { collection, getDocs, query, orderBy } from "firebase/firestore";
 
   defineOptions({
     name: 'MainLayout'
@@ -176,13 +183,34 @@
 
   const $q = useQuasar()
   const $route = useRoute()
+  const searchText = ref('')
   const leftDrawerOpen = ref(false)
   const popup = ref(false)
 
   function toggleLeftDrawer () {
     leftDrawerOpen.value = !leftDrawerOpen.value
   }
-  
+
+  const data = ref([])
+  onMounted(async () => {
+    const querySnapshot = await getDocs(query(collection(db, "tovari")));
+    let tempArr = []
+    querySnapshot.forEach((doc) => {
+      tempArr.push(
+        {
+          id: doc.id,
+          ...doc.data()
+        }
+      )
+    });
+    data.value = tempArr
+    console.log(data.value)
+  })
+
+  watch(searchText, async () => {
+    let searchArr = data.value.filter((item) => item.name.toLowerCase().includes(searchText.value.toLowerCase()))
+    data.value = Array.from(new Set([...searchArr, ...data.value]));
+  })
 </script>
 
 <style scoped lang="scss">
