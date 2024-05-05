@@ -131,12 +131,7 @@
 
     <!-- Содержимое layout -->
     <q-page-container :class="$route.fullPath === '/' ? '' : 'bg-secondary'">
-      <router-view />
-      <!-- 
-      <div class="wrapper">
-        <div v-for="n in 100" :key="n">Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium quisquam assumenda, commodi maxime asperiores nobis deleniti distinctio eum sit ea voluptas officia placeat. Est, ab non fuga soluta nostrum ipsam!</div>
-      </div>
-      -->
+      <router-view/>
     </q-page-container>
 
     <!-- Чат -->
@@ -229,9 +224,8 @@
   import { ref, watch, onMounted } from 'vue'
   import { useRoute } from 'vue-router'
   import CardComponent from 'src/components/CardComponent.vue';
-
   import { db } from 'src/firebase';
-  import { collection, getDocs, query, orderBy } from "firebase/firestore";
+  import { collection, getDocs, query } from "firebase/firestore";
 
 defineOptions({
   name: "MainLayout",
@@ -303,6 +297,7 @@ function ChatPush() {
 
   const $q = useQuasar()
   const $route = useRoute()
+  const data = ref([])
   const searchText = ref('')
   const leftDrawerOpen = ref(false)
   const popup = ref(false)
@@ -311,7 +306,6 @@ function ChatPush() {
     leftDrawerOpen.value = !leftDrawerOpen.value
   }
 
-  const data = ref([])
   onMounted(async () => {
     const querySnapshot = await getDocs(query(collection(db, "tovari")));
     let tempArr = []
