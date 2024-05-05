@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import firebase from "firebase/compat/app";
+import firebase from "firebase/compat/app"; // без этого импорта приложуха часто ломается, типо фаербазу не инициализируем
 const firebaseConfig = {
   apiKey: "AIzaSyCwCG3polsWg8UK_qGpNh3P2zywdvMJm1Q",
   authDomain: "frontend-group-marketplace.firebaseapp.com",
@@ -14,6 +14,33 @@ const firebaseConfig = {
   measurementId: "G-5QT0VKQK30"
 };
 firebase.initializeApp(firebaseConfig);
+
+// -------- здесь код для проверки того залогинен юзер или нет
+import { ref, onMounted } from 'vue';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+// import { useRouter } from 'vue-router'; // router is for signout redirect
+
+
+const isLoggedIn = ref(false);
+
+let auth;
+onMounted(() => {
+  auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+  if (user) {
+    isLoggedIn.value = true;
+    console.log('Юзер залогинен')
+  } else {
+    isLoggedIn.value = false;
+    console.log('Юзер НЕ! залогинен')
+  }
+  });
+});
+const handleSignOut = () =>{
+    signOut(props.auth).then(() =>{
+    // router.push("/");
+    });
+  };
 
 defineOptions({
   name: 'App'
