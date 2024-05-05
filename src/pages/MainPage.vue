@@ -8,12 +8,12 @@
             <q-btn label="По типу товара" no-caps class="text-subtitle1" @click="typeOfFillter = 'По типу товара'"/>
             <q-btn label="Сначала избранное" no-caps class="text-subtitle1" @click="typeOfFillter = 'Сначала избранное'"/>
 
-            <q-icon name="close" size="md" class="q-ml-md curosor-pointer" @click="clearFillter"/>
+            <q-icon name="close" size="md" class="q-ml-md cursor-pointer" v-ripple @click="clearFillter"/>
         </div>
         
         <div v-else class="row flex-center q-mb-md no-wrap">
             <q-select standout v-model="typeOfFillter" :options="options" label="Фильтр" bg-color="secondary" color="black" class="full-width"/>
-            <q-icon name="close" size="md" class="q-ml-md curosor-pointer" @click="clearFillter"/>
+            <q-icon name="close" size="md" class="q-ml-md cursor-pointer" v-ripple @click="clearFillter"/>
         </div>
     </div>
 
@@ -82,7 +82,7 @@
             //console.log(data.value)
         }
     }
-
+    
     async function clearFillter() {
         getData()
         typeOfFillter.value = ""

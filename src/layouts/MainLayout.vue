@@ -225,82 +225,73 @@
   import { useRoute } from 'vue-router'
   import CardComponent from 'src/components/CardComponent.vue';
   import { db } from 'src/firebase';
-  import { collection, getDocs, query } from "firebase/firestore";
+  import { collection, getDocs, query, orderBy } from "firebase/firestore";
 
-defineOptions({
-  name: "MainLayout",
-});
-
-const $q = useQuasar();
-const $route = useRoute();
-const leftDrawerOpen = ref(false);
-const Popup = ref(false);
-const medium = ref(false);
-const Timestamp = new Date();
-const scrollContainer = ref(null);
-
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
-}
-
-const TextChat = ref([""]);
-const Chat = ref([]);
-
-function BotGreeting() {
-  medium.value = true;
-  if (Chat.value.length === 0) {
-    setTimeout(() => {
-      Chat.value.push({
-        name: "Ваш покорный слуга ",
-        text: ["Чем я могу вам помочь?"],
-        stamp: `${Timestamp.getHours()}:${Timestamp.getMinutes()}`,
-        sent: false,
-      });
-    }, "1000");
-  }
-}
-
-function ChatPush() {
-  if (TextChat.value !== "") {
-    Chat.value.push({
-      name: "пользователь",
-      text: [TextChat.value],
-      stamp: `${Timestamp.getHours()}:${Timestamp.getMinutes()}`,
-      sent: true,
-    });
-    setTimeout(() => {
-      if (scrollContainer.value) {
-        scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
-      }
-    }, "0");
-    setTimeout(() => {
-      Chat.value.push({
-        name: "Ваш покорный слуга ",
-        text: [
-          "Обратитесь по вашему вопросу на горячую линию по номеру телефона: 8-800-555-35-35",
-        ],
-        stamp: `${Timestamp.getHours()}:${Timestamp.getMinutes()}`,
-        sent: false,
-      });
-    }, "1000");
-    setTimeout(() => {
-      if (scrollContainer.value) {
-        scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
-      }
-    }, "1001");
-    TextChat.value = "";
-  }
-}
   defineOptions({
-    name: 'MainLayout'
-  })
+    name: "MainLayout",
+  });
 
-  const $q = useQuasar()
-  const $route = useRoute()
+  const $q = useQuasar();
+  const $route = useRoute();
+
+  const leftDrawerOpen = ref(false);
+  const popup = ref(false);
+  const medium = ref(false);
+
   const data = ref([])
   const searchText = ref('')
-  const leftDrawerOpen = ref(false)
-  const popup = ref(false)
+
+  const Timestamp = new Date();
+  const scrollContainer = ref(null);
+
+  const TextChat = ref([""]);
+  const Chat = ref([]);
+
+  function BotGreeting() {
+    medium.value = true;
+    if (Chat.value.length === 0) {
+      setTimeout(() => {
+        Chat.value.push({
+          name: "Ваш покорный слуга ",
+          text: ["Чем я могу вам помочь?"],
+          stamp: `${Timestamp.getHours()}:${Timestamp.getMinutes()}`,
+          sent: false,
+        });
+      }, "1000");
+    }
+  }
+
+  function ChatPush() {
+    if (TextChat.value !== "") {
+      Chat.value.push({
+        name: "пользователь",
+        text: [TextChat.value],
+        stamp: `${Timestamp.getHours()}:${Timestamp.getMinutes()}`,
+        sent: true,
+      });
+      setTimeout(() => {
+        if (scrollContainer.value) {
+          scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
+        }
+      }, "0");
+      setTimeout(() => {
+        Chat.value.push({
+          name: "Ваш покорный слуга ",
+          text: [
+            "Обратитесь по вашему вопросу на горячую линию по номеру телефона: 8-800-555-35-35",
+          ],
+          stamp: `${Timestamp.getHours()}:${Timestamp.getMinutes()}`,
+          sent: false,
+        });
+      }, "1000");
+      setTimeout(() => {
+        if (scrollContainer.value) {
+          scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
+        }
+      }, "1001");
+      TextChat.value = "";
+    }
+  }
 
   function toggleLeftDrawer () {
     leftDrawerOpen.value = !leftDrawerOpen.value
@@ -328,107 +319,108 @@ function ChatPush() {
 </script>
 
 <style scoped lang="scss">
-.search-container {
-  width: 48%;
-  border-radius: 20px;
-  position: relative;
-}
-.popup {
-  position: absolute;
-  left: 0;
-  top: 80px;
-  padding: 12px;
-  height: 698px;
-  width: 100%;
-  border-radius: 20px;
-  z-index: 1000;
-}
-.popup-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.2);
-}
-.popup-z {
-  z-index: 1001;
-}
-.wrapper {
-  max-width: 1440px;
-  margin: 0 auto;
-}
-.header,
-.footer {
-  background: $main-gradient;
-}
-.list-title {
-  background: $main-gradient;
-  padding: 34px 15px;
-}
-.list-item {
-  transition: all 0.3s ease-in-out;
-}
-.list-item:hover {
-  background-color: #f5f5f5;
-}
-.active {
-  background-color: #f5f5f5;
-}
-.footer {
-  z-index: 400;
-}
-//чат popup
-.icon-chat {
-  position: fixed;
-  right: 2%;
-  top: 90%;
-  z-index: 500;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-}
-.q-dialog__inner--minimized > div {
-  max-width: 800px;
-}
-.popup-chat-box {
-  position: relative;
-  width: 100%;
-  height: 80%;
-  border-radius: 50px;
-}
-.chat-card-test {
-  width: 100%;
-  height: 100%;
-}
-.chat-header {
-  // position: absolute;
-  // bottom: 0;
-  border-bottom: solid 2px;
-   border-color: $secondary;
-}
-.chat-footer {
-  position: absolute;
-  bottom: 2%;
-  left: 0;
-  width: 100%;
-  border-top: solid  2px;
-  border-color: $secondary;
-}
-.scrollContainer {
-  width: 100%;
-  max-height: calc(74vh - 200px);
-  overflow-y: auto;
-  pointer-events: all;
-  margin-left: auto;
-  margin-right: auto;
-  -ms-overflow-style: none;
-      scrollbar-width: none;
-}
-.test::-webkit-scrollbar {
-      width: 0;
-      height: 0;
-}
+  .search-container {
+    width: 48%;
+    border-radius: 20px;
+    position: relative;
+  }
+  .popup {
+    position: absolute;
+    left: 0;
+    top: 80px;
+    padding: 12px;
+    height: 698px;
+    width: 100%;
+    border-radius: 20px;
+    z-index: 1000;
+  }
+  .popup-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.2);
+  }
+  .popup-z {
+    z-index: 1001;
+  }
+  .wrapper {
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+  .header,
+  .footer {
+    background: $main-gradient;
+  }
+  .list-title {
+    background: $main-gradient;
+    padding: 34px 15px;
+  }
+  .list-item {
+    transition: all 0.3s ease-in-out;
+  }
+  .list-item:hover {
+    background-color: #f5f5f5;
+  }
+  .active {
+    background-color: #f5f5f5;
+  }
+  .footer {
+    z-index: 400;
+  }
+
+  //чат popup
+  .icon-chat {
+    position: fixed;
+    right: 2%;
+    top: 90%;
+    z-index: 500;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+  .q-dialog__inner--minimized > div {
+    max-width: 800px;
+  }
+  .popup-chat-box {
+    position: relative;
+    width: 100%;
+    height: 80%;
+    border-radius: 50px;
+  }
+  .chat-card-test {
+    width: 100%;
+    height: 100%;
+  }
+  .chat-header {
+    // position: absolute;
+    // bottom: 0;
+    border-bottom: solid 2px;
+    border-color: $secondary;
+  }
+  .chat-footer {
+    position: absolute;
+    bottom: 2%;
+    left: 0;
+    width: 100%;
+    border-top: solid  2px;
+    border-color: $secondary;
+  }
+  .scrollContainer {
+    width: 100%;
+    max-height: calc(74vh - 200px);
+    overflow-y: auto;
+    pointer-events: all;
+    margin-left: auto;
+    margin-right: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .test::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
   .seach-popup {
     position: absolute;
     left: 0;
