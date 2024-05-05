@@ -23,7 +23,7 @@ import { auth } from "src/firebase";
 
 
 const isLoggedIn = ref(false);
-
+console.log(getAuth().currentUser)
 onMounted(() => {
   onAuthStateChanged(auth, (user) => {
   if (user) {
@@ -70,10 +70,6 @@ defineOptions({
 //   router.push("/") // редирект на корень раутера
 //   });
 // };
-
-
-
-
 
 // // console.log("Вот это текущий юзер:" + auth.currentuser); // текущий юзер
 

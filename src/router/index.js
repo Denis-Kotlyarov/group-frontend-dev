@@ -1,6 +1,7 @@
 import { route } from 'quasar/wrappers'
 import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
 import routes from './routes'
+import { getAuth } from 'firebase/auth';
 
 /*
  * If not building with SSR mode, you can
@@ -10,6 +11,7 @@ import routes from './routes'
  * async/await or return a Promise which resolves
  * with the Router instance.
  */
+
 
 export default route(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
@@ -25,6 +27,15 @@ export default route(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE)
   })
+
+  Router.beforeEach((to, from, next) => {
+    if (!getAuth().currentUser && to.path !== '/' && to.path !== '/search') {
+      alert("Вы не зарегистрированны! Пожалуйста пройдите регистрацию !ಠ_ರೃ")
+      return { path: '/' }
+    } else {
+      next()
+    }
+  }) 
 
   return Router
 })
