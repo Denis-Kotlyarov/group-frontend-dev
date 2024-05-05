@@ -229,6 +229,7 @@
   import { collection, getDocs, query, orderBy } from "firebase/firestore";
   import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
   import { auth } from "src/firebase";
+  import { date } from 'quasar'
 
   defineOptions({
     name: "MainLayout",
@@ -244,7 +245,6 @@
   const data = ref([])
   const searchText = ref('')
 
-  const Timestamp = new Date();
   const scrollContainer = ref(null);
 
   const TextChat = ref([""]);
@@ -254,10 +254,12 @@
     medium.value = true;
     if (Chat.value.length === 0) {
       setTimeout(() => {
+        let timeStamp = Date.now();
+        let formattedString = date.formatDate(timeStamp, 'HH:mm:ss')
         Chat.value.push({
           name: "Ваш покорный слуга ",
           text: ["Чем я могу вам помочь?"],
-          stamp: `${Timestamp.getHours()}:${Timestamp.getMinutes()}`,
+          stamp: formattedString,
           sent: false,
         });
       }, "1000");
@@ -266,10 +268,12 @@
 
   function ChatPush() {
     if (TextChat.value !== "") {
+      let timeStamp = Date.now();
+        let formattedString = date.formatDate(timeStamp, 'HH:mm:ss')
       Chat.value.push({
         name: "пользователь",
         text: [TextChat.value],
-        stamp: `${Timestamp.getHours()}:${Timestamp.getMinutes()}`,
+        stamp: formattedString,
         sent: true,
       });
       setTimeout(() => {
@@ -278,12 +282,14 @@
         }
       }, "0");
       setTimeout(() => {
+        let timeStamp = Date.now();
+        let formattedString = date.formatDate(timeStamp, 'HH:mm:ss')
         Chat.value.push({
           name: "Ваш покорный слуга ",
           text: [
             "Обратитесь по вашему вопросу на горячую линию по номеру телефона: 8-800-555-35-35",
           ],
-          stamp: `${Timestamp.getHours()}:${Timestamp.getMinutes()}`,
+          stamp: formattedString,
           sent: false,
         });
       }, "1000");
