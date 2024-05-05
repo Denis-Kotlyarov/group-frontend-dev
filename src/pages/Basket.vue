@@ -27,7 +27,7 @@
                     <q-item-label>Название</q-item-label>
                     <div>
                         <q-btn to="/" flat round text-color="grey" icon="grade" />
-                        <q-btn to="/" flat round text-color="grey" icon="delete" />
+                        <q-btn @click="removeProduct" flat round text-color="grey" icon="delete" />
                     </div>
                 </div>
                 <div>
@@ -84,7 +84,8 @@
     <div class="basket-form__basket-section__right column bg-white q-pa-lg">
 
         <div class="flex flex-center">
-            <q-btn style="width: 250px" to="/user" color="positive" label="Заказать" no-caps />
+            <q-btn @click="сheckout" style="width: 250px" color="positive" label="Заказать" no-caps />
+            <!-- to="/user" -->
         </div>
 
         <p class="text-caption text-center q-mt-md">Нажмите на кнопку заказа чтобы завершить его</p>
@@ -103,9 +104,53 @@
 </q-page>
     </div>
 
+<!-- popup уведомление о  покупке товара -->
+
+<q-dialog v-model="persistent" persistent transition-show="scale" transition-hide="scale">
+      <q-card class="bg-positive text-white" style="width: 300px">
+        <q-card-section>
+          <div class="text-h6">Спасибо, что выбрали нас!!!</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          Заказ оформлен и оплачен
+        </q-card-section>
+
+        <q-card-actions align="right" class="bg-white text-positive">
+          <q-btn flat label="OK" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
 </template>
 
 <script setup>
+import { ref, watch } from "vue"
+ import { useQuasar } from 'quasar'
+
+
+ const basket = ref(true)
+ const $q = useQuasar()
+ const medium = ref(false)
+ const persistent = ref(false)
+
+
+
+// функция срабатывает при нажатии на кнопку "купить"
+ function сheckout(){
+    medium.value = true; 
+    persistent.value = true;     
+ }
+
+ function removeProduct(){
+    $q.notify({
+          type: 'negative',
+          message: 'Товар удален из корзины!!!'
+        })
+ }
+
+      
+    
 
 </script>
 
@@ -131,4 +176,12 @@
     height: 100px;
     width: 100px;
 }
+
+.my-custom-toggle{
+    border: 1px solid #027be3 
+}
+ 
+ .q-dialog__inner > div {
+    border-radius: 20px;
+ }
 </style>
