@@ -211,7 +211,7 @@
               >
             </p>
           </q-item>
-          <q-btn @click="handleSignOut" v-if="isLoggedIn">Выйти из аккаунта</q-btn>
+          <q-btn @click="handleSignOut" v-if="isLoggedIn" to="/">Выйти из аккаунта</q-btn>
         </q-toolbar>
       </div>
     </q-footer>
@@ -320,6 +320,7 @@
 
   watch(searchText, async () => {
     let searchArr = data.value.filter((item) => item.name.toLowerCase().includes(searchText.value.toLowerCase()))
+    console.log(searchArr)
     data.value = Array.from(new Set([...searchArr, ...data.value]));
   })
   

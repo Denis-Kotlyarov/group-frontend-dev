@@ -1,5 +1,5 @@
 <template>
-  <q-card class="my-card">
+  <q-card class="my-card" @click="showMoreInfo = true">
     <div>
       <img :src="tovar.imgURL" class="card-img rounded-borders">
       <div class="bg-primary q-pa-xs favorite-icon-div"
@@ -21,21 +21,115 @@
 
     <q-card-section class="full-width">
       <q-btn no-caps class="text-bold full-width" color="primary" label="В корзину" style="border-radius: 10px;"/>
-      <!-- ноу-капс выключает капс на кнопке -->
     </q-card-section>
   </q-card>
+
+  <!-- попап с карточкой -->
+  <q-dialog v-model="showMoreInfo" full-width>
+    <div class="bg-white pop-up-product-card-container">
+      <q-card-actions class="bg-white text-teal justify-end q-mr-md q-mt-sm">
+        <q-btn flat icon="close" color="primary" v-close-popup />
+      </q-card-actions>
+      <div class="row general-box-for-pop-ap-product-cards q-pb-xl">
+        <div class="col-6 text-center q-ma-md" style="background-size:contain">
+          <q-img
+            class="img-pop-ap-product-cards"
+            :src="tovar.imgURL"
+          />
+        </div>
+
+        <div class="col q-ma-md">
+          <div class="title-box">
+            <p class="text-h6">{{ tovar.name }}</p>
+          </div>
+          <div class="shadow-5 description-box text-center q-pa-lg">
+            <p class="text-h7">{{ tovar.description }}</p>
+          </div>
+        </div>
+
+        <div class="col q-ma-md">
+          <div class="title-box">
+            <p></p>
+          </div>
+          <div class="shadow-5 add-to-cart-box text-center q-pa-lg">
+            <div inline-action class="row items-baseline">
+              <!-- <q-btn
+                class="col-4 q-mb-xl"
+                unelevated
+                rounded
+                color="positive"
+                :label="tovar.price + '₽'"
+                type="submit"
+              /> -->
+              <p class="col-3">К оплате {{ tovar.price }}₽</p>
+            </div>
+
+            <div class="row justify-between items-baseline">
+              <q-btn
+                class="col q-mr-sm"
+                unelevated
+                rounded
+                :disable="isLoggedIn === null"
+                color="positive"
+                label="В корзину"
+                type="submit"
+                @click="addToCart"
+              />
+              <q-btn
+                class="col q-ml-sm"
+                unelevated
+                :disable="isLoggedIn === null"
+                rounded
+                color="primary"
+                label="В избранное"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </q-dialog>
 </template>
 
 <script setup>
   import { ref } from "vue"
+  import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+  import { getAuth, onAuthStateChanged } from 'firebase/auth';
+  import { auth, db } from "src/firebase";
 
-  let favoriteToggler = ref(false)
-
+  // Получени ифн. о товаре
   const props = defineProps({
     tovar: {
       type: Object
     }
   })
+
+  // Избранное
+  let favoriteToggler = ref(false)
+  // Открытие popup
+  let showMoreInfo = ref(false);
+
+  // Получение email
+  const email = ref(auth.currentUser?.email.toString())
+  // Проверка регистрации для работоспособности кнопок в окне
+  let isLoggedIn = ref(getAuth().currentUser)
+  onAuthStateChanged(auth, (user) => {
+  if (user) {
+    isLoggedIn.value = true;
+    email.value = auth.currentUser?.email.toString()
+  } else {
+    isLoggedIn.value = null;
+    email.value = ""
+  }
+  });
+
+  async function addToCart() {
+    await updateDoc(doc(db, "usersCartAndFav", email.value), {
+      Cart: arrayUnion({
+        id: props.tovar.id,
+      })
+    });
+  }
 </script>
 
 <style lang="sass" scoped>
@@ -62,4 +156,32 @@
     top: 20px
     z-index: 4
     border-radius: 10px
+
+  //стили к pop-ap карточки товаров
+  .general-box-for-pop-ap-product-cards
+    height: 90%
+    width: 100%
+
+  .pop-up-product-card-container
+    height: 800px
+    border-radius: 50px
+
+  .img-pop-ap-product-cards
+    height: 90%
+    width: 90%
+    border-radius: 20px
+    
+  .description-box
+    height: 80%
+    width: 100%
+    border-radius: 20px
+
+  .add-to-cart-box
+    height: 30%
+    width: 80%
+    border-radius: 20px
+
+  .title-box
+    height: 20%
+    width: 100%
 </style>

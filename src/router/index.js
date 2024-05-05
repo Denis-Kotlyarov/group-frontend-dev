@@ -1,7 +1,6 @@
 import { route } from 'quasar/wrappers'
-import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
+import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory, useRoute } from 'vue-router'
 import routes from './routes'
-import { getAuth } from 'firebase/auth';
 
 /*
  * If not building with SSR mode, you can
@@ -29,9 +28,11 @@ export default route(function (/* { store, ssrContext } */) {
   })
 
   Router.beforeEach((to, from, next) => {
-    if (!getAuth().currentUser && to.path !== '/' && to.path !== '/search') {
+    let isLoggedIn = JSON.parse(localStorage.getItem('isLoggedIn'));
+
+    if (!isLoggedIn && to.path !== '/' && to.path !== '/search') {
       alert("Вы не зарегистрированны! Пожалуйста пройдите регистрацию !ಠ_ರೃ")
-      return { path: '/' }
+      next('/')
     } else {
       next()
     }

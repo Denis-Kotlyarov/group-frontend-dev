@@ -151,33 +151,17 @@ const tovariCollectionRef = collection(db, "tovari");
 const data = ref([])
 const datalimit2 = ref([])
 
-    onMounted( async () => {
-        const querySnapshot = await getDocs(collection(db, "tovari"));
-        querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            data.value.push(
-                {
-                    id: doc.id,
-                    ...doc.data()
-                }
-            )
-        });
-        console.log(data);
-    })
-
-    onMounted( async () => {
-        const querySnapshot = await getDocs(query(collection(db, "tovari"), limit(2)));
-        querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            datalimit2.value.push(
-                {
-                    id: doc.id,
-                    ...doc.data()
-                }
-            )
-        });
-        console.log(datalimit2);
-    })
+onMounted( async () => {
+  const querySnapshot = await getDocs(query(collection(db, "tovari"), limit(2)));
+  querySnapshot.forEach((doc) => {
+    datalimit2.value.push(
+      {
+        id: doc.id,
+        ...doc.data()
+      }
+    )
+  })
+})
 
 // //Генератор рандомных товаров @click="addTodo"
 // import { onMounted } from "vue";
