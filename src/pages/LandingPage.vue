@@ -42,7 +42,7 @@
         @click="popUpRegistration = true"
         v-if="!isLoggedIn"
         class="text-h6"
-        label="регистрация"
+        label="зайдите в аккаунт"
         style="
           border-radius: 10px;
           max-width: 40%;
@@ -106,8 +106,8 @@
         "
       />
     </div>
-
-    <PopApAuth/>
+    <q-dialog v-model="popUpRegistration"><PopApAuth/></q-dialog>
+    
 
   </div>
 </template>
@@ -222,18 +222,21 @@ const datalimit2 = ref([])
 
   // -------- здесь код для проверки того залогинен юзер или нет
   const isLoggedIn = ref(false);
+  const popUpRegistration = ref(false);
 
   onMounted(() => {
     onAuthStateChanged(auth, (user) => {
     if (user) {
       isLoggedIn.value = true;
-      console.log('MainLayout говорит - Юзер залогинен')
+      popUpRegistration.value = false; //НЕ УДАЛЯТЬ, эта штука ЗАКРЫВАЕТ ПОПАП РЕГИСТРАЦИИ КОРРЕКТНО(исходя из UX) без +100 строк кода с эмитами и тд
+      console.log('LandingPage говорит - Юзер залогинен')
     } else {
       isLoggedIn.value = false;
-      console.log('MainLayout говорит - Юзер НЕ! залогинен')
+      console.log('LandingPage говорит - Юзер НЕ! залогинен')
     }
     });
   });
+
 </script>
 
 <style lang="scss" scoped>
