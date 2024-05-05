@@ -227,6 +227,8 @@
   import CardComponent from 'src/components/CardComponent.vue';
   import { db } from 'src/firebase';
   import { collection, getDocs, query, orderBy } from "firebase/firestore";
+  import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+  import { auth } from "src/firebase";
 
   defineOptions({
     name: "MainLayout",
@@ -321,9 +323,7 @@
 
 
 // -------- здесь код для проверки того залогинен юзер или нет
-import { onMounted } from 'vue';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth } from "src/firebase";
+
 // import { useRouter } from 'vue-router'; // router is for signout redirect
 
 
