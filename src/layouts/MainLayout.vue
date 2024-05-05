@@ -139,6 +139,7 @@
       @click="BotGreeting"
       class="icon-chat bg-primary"
       icon="chat"
+      style="color: white;"
     ></q-btn>
 
     <!-- popup чата -->
