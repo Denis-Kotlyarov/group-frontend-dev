@@ -1,5 +1,5 @@
 <template>
-  <q-card class="my-card" @click="showMoreInfo = true">
+  <q-card class="my-card">
     <div>
       <img :src="tovar.imgURL" class="card-img rounded-borders" />
       <div
@@ -26,7 +26,7 @@
     </q-card-section>
 
     <q-card-section class="full-width">
-      <q-btn no-caps class="text-bold full-width" color="primary" label="В корзину" style="border-radius: 10px;"/>
+      <q-btn no-caps class="text-bold full-width" color="primary" label="В корзину" style="border-radius: 10px;" @click="showMoreInfo = true"/>
     </q-card-section>
   </q-card>
 
@@ -138,6 +138,8 @@
         id: props.tovar.id,
       })
     });
+
+    AddToBasket()
   }
 
   // функция срабатывающая при клике на "добавить в избранное"
@@ -167,11 +169,11 @@
 </script>
 
 <style lang="sass" scoped>
-.my-card
-  width: 100%
-  max-width: 280px
-  min-width: 70px
-  height: calc(var(--width) / 2)
+  .my-card
+    width: 100%
+    max-width: 280px
+    min-width: 70px
+    height: calc(var(--width) / 2)
 
   .my-card-text
     color: black
@@ -218,7 +220,7 @@
   .title-box
     height: 20%
     width: 100%
-    
+
   .my-badge-class
     border: 1px solid #ccc
 </style>

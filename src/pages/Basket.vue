@@ -17,8 +17,8 @@
                         <div class="column flex-center justify-between">
                             <q-item-label>Название</q-item-label>
                             <div>
-                                <q-btn to="/" flat round text-color="grey" icon="grade" />
-                                <q-btn to="/" flat round text-color="grey" icon="delete" />
+                                <q-btn flat round text-color="grey" icon="grade" />
+                                <q-btn flat round text-color="grey" icon="delete" @click="removeProduct"/>
                             </div>
                         </div>
                         <div>
@@ -35,7 +35,7 @@
             <!-- Функционал корзинки -->
             <div class="basket-form__basket-section__right column bg-white q-pa-lg">
                 <div class="flex flex-center">
-                    <q-btn style="width: 250px" to="/user" color="positive" label="Заказать" no-caps />
+                    <q-btn @click="checkout" style="width: 250px" color="positive" label="Заказать" no-caps />
                 </div>
                 <p class="text-caption text-center q-mt-md">Нажмите на кнопку заказа чтобы завершить его</p>
                 <div class="row col-6 q-mt-lg">
@@ -51,12 +51,30 @@
 
         </q-page>
     </div>
+
+    <!-- popup уведомление о  покупке товара -->
+    <q-dialog v-model="persistent" persistent transition-show="scale" transition-hide="scale">
+      <q-card class="bg-positive text-white" style="width: 300px">
+        <q-card-section>
+          <div class="text-h6">Спасибо, что выбрали нас!!!</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          Заказ оформлен и оплачен
+        </q-card-section>
+
+        <q-card-actions align="right" class="bg-white text-positive">
+          <q-btn flat label="OK" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 </template>
 
 <script setup>
     import { ref, onMounted, onBeforeMount } from "vue"
     import { collection, getDoc, getDocs, query, where, doc } from "firebase/firestore";
     import { auth, db } from "src/firebase";
+    import { useQuasar } from 'quasar'
 
     const basketIds = ref([])
     const basketArr = ref([])
@@ -121,6 +139,22 @@
     //     })
     //     basketArr.value = filtred
     // }
+
+    const basket = ref(true)
+    const $q = useQuasar()
+    const medium = ref(false)
+    const persistent = ref(false)
+    function checkout(){
+        medium.value = true; 
+        persistent.value = true;     
+    }
+
+    function removeProduct(){
+        $q.notify({
+            type: 'negative',
+            message: 'Товар удален из корзины!!!'
+        })
+    }
 </script>
 
 <style lang="scss" scoped>
