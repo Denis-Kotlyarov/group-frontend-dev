@@ -92,8 +92,7 @@
       />
     </div>
 
-    <Register/>
-    <SignIn/>
+    <PopApAuth/>
 
   </div>
 </template>
@@ -115,8 +114,9 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { db } from "src/firebase";
-import Register from "src/components/Register.vue";
-import SignIn from "src/components/SignIn.vue";
+// import Register from "src/components/Register.vue";
+// import SignIn from "src/components/SignIn.vue";
+import PopApAuth from "src/components/PopApAuth.vue";
 
 /**
  * firebase ref
