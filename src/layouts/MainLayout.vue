@@ -35,7 +35,7 @@
 
             <!-- popua для поиска -------------------------------------------------------------------------------------------->
             <div class="bg-white seach-popup" v-if="popup">
-              <div class="flex flex-center q-gutter-x-md q-gutter-y-md q-mt-md" style="max-height: calc(100vh - 150px); overflow-y: auto; pointer-events: all;">
+              <div class="flex flex-center q-gutter-x-md q-gutter-y-md q-mt-md scroll-popup-search">
                 <card-component class="" v-for="tovar in data" :key="tovar.id" :tovar="tovar"/>
               </div>
             </div>
@@ -454,7 +454,7 @@ const handleSignOut = () =>{
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-  .test::-webkit-scrollbar {
+  .scrollContainer::-webkit-scrollbar {
     width: 0;
     height: 0;
   }
@@ -466,5 +466,16 @@ const handleSignOut = () =>{
     width: 100%;
     border-radius: 20px;
     z-index: 1000;
+  }
+  .scroll-popup-search{
+    max-height: calc(100vh - 150px);
+     overflow-y: auto;
+      pointer-events: all;
+      -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scroll-popup-search::-webkit-scrollbar {
+    width: 0;
+    height: 0;
   }
 </style>
