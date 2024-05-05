@@ -18,26 +18,25 @@ firebase.initializeApp(firebaseConfig);
 // -------- здесь код для проверки того залогинен юзер или нет
 import { ref, onMounted } from 'vue';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { auth } from "src/firebase";
 // import { useRouter } from 'vue-router'; // router is for signout redirect
 
 
 const isLoggedIn = ref(false);
 
-let auth;
 onMounted(() => {
-  auth = getAuth();
   onAuthStateChanged(auth, (user) => {
   if (user) {
     isLoggedIn.value = true;
-    console.log('Юзер залогинен')
+    console.log('App говорит - Юзер залогинен')
   } else {
     isLoggedIn.value = false;
-    console.log('Юзер НЕ! залогинен')
+    console.log('App говорит - Юзер НЕ! залогинен')
   }
   });
 });
 const handleSignOut = () =>{
-    signOut(props.auth).then(() =>{
+    signOut(auth).then(() =>{
     // router.push("/");
     });
   };
