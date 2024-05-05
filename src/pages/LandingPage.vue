@@ -40,8 +40,23 @@
     >
       <q-btn
         @click="popUpRegistration = true"
+        v-if="!isLoggedIn"
         class="text-h6"
         label="регистрация"
+        style="
+          border-radius: 10px;
+          max-width: 40%;
+          min-width: 30%;
+          min-height: 50px;
+          color: black;
+          background-color: white;
+        "
+      />
+      <q-btn
+        to="/favpage"
+        v-if="isLoggedIn"
+        class="text-h6"
+        label="ваше избранное"
         style="
           border-radius: 10px;
           max-width: 40%;
@@ -113,10 +128,11 @@ import {
   limit,
   getDocs,
 } from "firebase/firestore";
-import { db } from "src/firebase";
+import { db, auth } from "src/firebase";
 // import Register from "src/components/Register.vue";
 // import SignIn from "src/components/SignIn.vue";
 import PopApAuth from "src/components/PopApAuth.vue";
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 
 /**
  * firebase ref
@@ -203,6 +219,21 @@ const datalimit2 = ref([])
 //         isFav: false,
 //     });
 // };
+
+  // -------- здесь код для проверки того залогинен юзер или нет
+  const isLoggedIn = ref(false);
+
+  onMounted(() => {
+    onAuthStateChanged(auth, (user) => {
+    if (user) {
+      isLoggedIn.value = true;
+      console.log('MainLayout говорит - Юзер залогинен')
+    } else {
+      isLoggedIn.value = false;
+      console.log('MainLayout говорит - Юзер НЕ! залогинен')
+    }
+    });
+  });
 </script>
 
 <style lang="scss" scoped>
