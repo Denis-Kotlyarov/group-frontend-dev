@@ -95,7 +95,7 @@
       <q-btn
         class="text-h6"
         label="Найти товары"
-        to="/"
+        to="/search"
         style="
           border-radius: 10px;
           max-width: 40%;
