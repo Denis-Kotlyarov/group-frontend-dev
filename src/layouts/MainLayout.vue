@@ -29,7 +29,7 @@
           <div class="q-px-md q-py-xs q-my-md q-mx-md bg-white col search-container popup-z">
             <q-input borderless bg-color="white" placeholder="Поиск" v-model="searchText" class="text-black text-body1 popup-z" color="black" @click="popup=true">
               <template v-slot:append>
-                <q-btn round dense flat icon="search" clickable to='/'/>
+                <q-btn round dense flat icon="search" clickable to="/search"/>
               </template>
             </q-input>
 
@@ -130,12 +130,11 @@
     </q-drawer>
 
     <!-- Содержимое layout -->
-    <q-page-container :class="$route.fullPath === '/' ? '' : 'bg-secondary'">
-      <router-view/>
+    <q-page-container :class="$route.fullPath === '/search' ? '' : 'bg-secondary'">
+      <router-view />
     </q-page-container>
 
     <!-- Чат -->
-
     <q-btn
       @click="BotGreeting"
       class="icon-chat bg-primary"
@@ -143,7 +142,6 @@
     ></q-btn>
 
     <!-- popup чата -->
-
     <q-dialog v-model="medium">
       <q-card class="popup-chat-box">
         <q-card-section class="chat-header q-mt-xs">
@@ -225,10 +223,9 @@
   import { ref, watch, onMounted } from 'vue'
   import { useRoute } from 'vue-router'
   import CardComponent from 'src/components/CardComponent.vue';
-  import { db } from 'src/firebase';
-  import { collection, getDocs, query, orderBy } from "firebase/firestore";
-  import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
-  import { auth } from "src/firebase";
+  import { db, auth } from 'src/firebase';
+  import { collection, getDocs, query } from "firebase/firestore";
+  import { onAuthStateChanged, signOut } from 'firebase/auth';
 
   defineOptions({
     name: "MainLayout",
@@ -322,31 +319,26 @@
   
 
 
-// -------- здесь код для проверки того залогинен юзер или нет
+  // -------- здесь код для проверки того залогинен юзер или нет
+  const isLoggedIn = ref(false);
 
-// import { useRouter } from 'vue-router'; // router is for signout redirect
-
-
-const isLoggedIn = ref(false);
-
-
-onMounted(() => {
-  onAuthStateChanged(auth, (user) => {
-  if (user) {
-    isLoggedIn.value = true;
-    console.log('MainLayout говорит - Юзер залогинен')
-  } else {
-    isLoggedIn.value = false;
-    console.log('MainLayout говорит - Юзер НЕ! залогинен')
-  }
+  onMounted(() => {
+    onAuthStateChanged(auth, (user) => {
+    if (user) {
+      isLoggedIn.value = true;
+      console.log('MainLayout говорит - Юзер залогинен')
+    } else {
+      isLoggedIn.value = false;
+      console.log('MainLayout говорит - Юзер НЕ! залогинен')
+    }
+    });
   });
-});
 
-const handleSignOut = () =>{
-  signOut(auth).then(() =>{
-  // router.push("/");
-  });
-};
+  const handleSignOut = () =>{
+    signOut(auth).then(() =>{
+    // router.push("/");
+    });
+  };
 </script>
 
 <style scoped lang="scss">

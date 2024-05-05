@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <h6 v-if="true" class="q-mb-lg">Запрос который ввел пользователь в строке поиска...</h6>
+        <h6 v-if="true" class="q-mb-lg"></h6>
         <div v-if="$q.screen.width >= 880" class="btns-container flex items-center no-wrap q-gutter-x-md q-gutter-y-md q-mb-lg text-h3">
             <q-btn label="По популярности" no-caps class="text-subtitle1" @click="typeOfFillter = 'По популярности'"/>
             <q-btn label="По цене" no-caps class="text-subtitle1" @click="typeOfFillter = 'По цене'"/>
@@ -25,7 +25,7 @@
 <script setup>
     import CardComponent from 'src/components/CardComponent.vue';
     import { useQuasar } from 'quasar';
-    import { ref, onMounted, watch } from 'vue';
+    import { ref, onMounted, watch, defineProps } from 'vue';
     import { db } from 'src/firebase';
     import { collection, getDocs, query, orderBy } from "firebase/firestore";
 
