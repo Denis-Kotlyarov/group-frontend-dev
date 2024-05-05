@@ -13,7 +13,7 @@
         <div class="flex flex-center q-gutter-x-md q-gutter-y-md q-mt-md">
           <card-component
             class=""
-            v-for="tovar in data"
+            v-for="tovar in datalimit2"
             :key="tovar.id"
             :tovar="tovar"
             style="max-width: 180px"
@@ -149,6 +149,7 @@ const tovariCollectionRef = collection(db, "tovari");
 // });
 
 const data = ref([])
+const datalimit2 = ref([])
 
     onMounted( async () => {
         const querySnapshot = await getDocs(collection(db, "tovari"));
@@ -164,7 +165,19 @@ const data = ref([])
         console.log(data);
     })
 
-
+    onMounted( async () => {
+        const querySnapshot = await getDocs(query(collection(db, "tovari"), limit(2)));
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            datalimit2.value.push(
+                {
+                    id: doc.id,
+                    ...doc.data()
+                }
+            )
+        });
+        console.log(datalimit2);
+    })
 
 // //Генератор рандомных товаров @click="addTodo"
 // import { onMounted } from "vue";
