@@ -213,6 +213,7 @@
               >
             </p>
           </q-item>
+          <q-btn @click="handleSignOut" v-if="isLoggedIn">Выйти из аккаунта</q-btn>
         </q-toolbar>
       </div>
     </q-footer>
@@ -316,6 +317,36 @@
     let searchArr = data.value.filter((item) => item.name.toLowerCase().includes(searchText.value.toLowerCase()))
     data.value = Array.from(new Set([...searchArr, ...data.value]));
   })
+  
+
+
+// -------- здесь код для проверки того залогинен юзер или нет
+import { onMounted } from 'vue';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { auth } from "src/firebase";
+// import { useRouter } from 'vue-router'; // router is for signout redirect
+
+
+const isLoggedIn = ref(false);
+
+
+onMounted(() => {
+  onAuthStateChanged(auth, (user) => {
+  if (user) {
+    isLoggedIn.value = true;
+    console.log('MainLayout говорит - Юзер залогинен')
+  } else {
+    isLoggedIn.value = false;
+    console.log('MainLayout говорит - Юзер НЕ! залогинен')
+  }
+  });
+});
+
+const handleSignOut = () =>{
+  signOut(auth).then(() =>{
+  // router.push("/");
+  });
+};
 </script>
 
 <style scoped lang="scss">

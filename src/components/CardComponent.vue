@@ -43,6 +43,7 @@
     width: 100%
     max-width: 280px
     min-width: 70px
+    height: calc(var(--width) / 2)
 
   .my-card-text
     color: black
