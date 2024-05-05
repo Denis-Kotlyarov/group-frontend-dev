@@ -35,7 +35,7 @@
 
             <!-- popua для поиска -------------------------------------------------------------------------------------------->
             <div class="bg-white seach-popup" v-if="popup">
-              <div class="flex flex-center q-gutter-x-md q-gutter-y-md q-mt-md" style="max-height: calc(100vh - 150px); overflow-y: auto; pointer-events: all;">
+              <div class="flex flex-center q-gutter-x-md q-gutter-y-md q-mt-md scroll-popup-search">
                 <card-component class="" v-for="tovar in data" :key="tovar.id" :tovar="tovar"/>
               </div>
             </div>
@@ -226,6 +226,7 @@
   import { db, auth } from 'src/firebase';
   import { collection, getDocs, query } from "firebase/firestore";
   import { onAuthStateChanged, signOut } from 'firebase/auth';
+  import { date } from 'quasar'
 
   defineOptions({
     name: "MainLayout",
@@ -241,7 +242,6 @@
   const data = ref([])
   const searchText = ref('')
 
-  const Timestamp = new Date();
   const scrollContainer = ref(null);
 
   const TextChat = ref([""]);
@@ -251,10 +251,12 @@
     medium.value = true;
     if (Chat.value.length === 0) {
       setTimeout(() => {
+        let timeStamp = Date.now();
+        let formattedString = date.formatDate(timeStamp, 'HH:mm:ss')
         Chat.value.push({
           name: "Ваш покорный слуга ",
           text: ["Чем я могу вам помочь?"],
-          stamp: `${Timestamp.getHours()}:${Timestamp.getMinutes()}`,
+          stamp: formattedString,
           sent: false,
         });
       }, "1000");
@@ -263,10 +265,12 @@
 
   function ChatPush() {
     if (TextChat.value !== "") {
+      let timeStamp = Date.now();
+        let formattedString = date.formatDate(timeStamp, 'HH:mm:ss')
       Chat.value.push({
         name: "пользователь",
         text: [TextChat.value],
-        stamp: `${Timestamp.getHours()}:${Timestamp.getMinutes()}`,
+        stamp: formattedString,
         sent: true,
       });
       setTimeout(() => {
@@ -275,12 +279,14 @@
         }
       }, "0");
       setTimeout(() => {
+        let timeStamp = Date.now();
+        let formattedString = date.formatDate(timeStamp, 'HH:mm:ss')
         Chat.value.push({
           name: "Ваш покорный слуга ",
           text: [
             "Обратитесь по вашему вопросу на горячую линию по номеру телефона: 8-800-555-35-35",
           ],
-          stamp: `${Timestamp.getHours()}:${Timestamp.getMinutes()}`,
+          stamp: formattedString,
           sent: false,
         });
       }, "1000");
@@ -440,7 +446,7 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-  .test::-webkit-scrollbar {
+  .scrollContainer::-webkit-scrollbar {
     width: 0;
     height: 0;
   }
@@ -452,5 +458,16 @@
     width: 100%;
     border-radius: 20px;
     z-index: 1000;
+  }
+  .scroll-popup-search{
+    max-height: calc(100vh - 150px);
+     overflow-y: auto;
+      pointer-events: all;
+      -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scroll-popup-search::-webkit-scrollbar {
+    width: 0;
+    height: 0;
   }
 </style>
