@@ -10,22 +10,22 @@
                 <div class="card-all column justify-evenly">
 
                     <!-- ТОВАР элемент -->
-                    <div class="card1 row justify-around q-pt-lg">
+                    <div class="card1 row justify-around q-pt-lg" v-for="tovar in basketArr" :key="tovar.id">
                         <div>
-                            <q-img class="basket-img" src="https://cdn.quasar.dev/img/parallax2.jpg" />
+                            <q-img class="basket-img" :src="tovar.imgURL" />
                         </div>
                         <div class="column flex-center justify-between">
-                            <q-item-label>Название</q-item-label>
+                            <q-item-label>{{ tovar.name }}</q-item-label>
                             <div>
                                 <q-btn flat round text-color="grey" icon="grade" />
                                 <q-btn flat round text-color="grey" icon="delete" @click="removeProduct"/>
                             </div>
                         </div>
-                        <div>
+                        <!-- <div>
                             <q-item-label>Количество:</q-item-label>
-                        </div>
+                        </div> -->
                         <div class="text-weight-bold">
-                            <q-item-label>1990 руб</q-item-label>
+                            <q-item-label>{{ tovar.price }}₽</q-item-label>
                         </div>
                     </div>
 
@@ -43,7 +43,7 @@
                         <p class="text-h6 text-weight-bold">Ваша корзина</p>
                         <div class="row justify-between">
                             <p>Товары (n)</p>
-                            <p class="text-weight-bold">1990 руб</p>
+                            <p class="text-weight-bold">{{ total }}</p>
                         </div>
                     </div>
                 </div>
@@ -76,6 +76,7 @@
     import { auth, db } from "src/firebase";
     import { useQuasar } from 'quasar'
 
+    const total = ref([])
     const basketIds = ref([])
     const basketArr = ref([])
     const email = auth.currentUser?.email.toString()
@@ -83,8 +84,8 @@
     onBeforeMount( async () => {
         const docRef = doc(db, "usersCartAndFav", email);
         const docSnap = await getDoc(docRef);
-        basketIds.value = docSnap.data().Cart
-        //console.log(basketIds)
+        basketIds.value = (await getDoc(doc(db, "usersCartAndFav", email))).data("Cart");
+        console.log(basketIds.value.Cart.find((item) => item = 'N6oXKma7CnSsuAJkHseQ'))
 
         const querySnapshot = await getDocs(collection(db, "tovari"));
         querySnapshot.forEach((doc) => {
@@ -95,7 +96,24 @@
                 }
             )
         })
-        //console.log(basketArr)
+
+        let filtred = ref([])
+
+        //console.log(basketArr.value.find((ellemnt) => ellemnt.id === 'N6oXKma7CnSsuAJkHseQ'))
+        console.log(basketIds.value.Cart.find((item) => item = 'N6oXKma7CnSsuAJkHseQ'))
+        basketIds.value.Cart.forEach((item) => {
+            let findItem = basketArr.value.find((ellemnt) => ellemnt.id === item.id)
+            console.log(findItem)
+            if (findItem !== undefined) {
+                console.log(findItem)
+                filtred.value.push(findItem)
+            }
+        })
+
+        basketArr.value = filtred.value
+        console.log(basketArr.value)
+
+        total.value = basketArr.value.reduce((accumulator, currentValue) => accumulator + currentValue.price, 0)
     })
 
     onMounted( async () => {
@@ -103,8 +121,6 @@
         // querySnapshot.forEach((doc) => {
         //     console.log(doc.id, " => ", doc.data());
         // });
-        
-        console.log(basketIds)
         // console.log(basketArr)
 
         let filtred = ref([])
@@ -116,14 +132,17 @@
         // let basketArrfiltred = []
         // basketIdsfiltred.push(...basketArr.value)
         // console.log(basketArrfiltred);
-        
-        basketIds.value.map((item) => {
-            let findItem = basketArr.value.find((ellemnt) => ellemnt.id === item)
-            if (findItem !== undefined) {
-                filtred.value.push(findItem)
-            }
-        })
-        console.log(filtred)
+        // let a = []
+        // a.push(basketIds.value.Cart.find((item) => item = 'N6oXKma7CnSsuAJkHseQ'))
+        // console.log(basketIds.value.Cart.find((item) => item = 'N6oXKma7CnSsuAJkHseQ'))
+        // basketIds.value.Cart.forEach((item) => {
+        //     let findItem = basketArr.value.find((ellemnt) => ellemnt.id === item)
+        //     if (findItem !== undefined) {
+        //         filtred.value.push(findItem)
+        //     }
+        // })
+        // let a = ref(basketIds.value.find((item) => item.id == "cdqA0POC80XJ15dgssqO"))
+        // console.log(a)
 
         // console.log(basketArr.value)
     })
@@ -149,7 +168,7 @@
         persistent.value = true;     
     }
 
-    function removeProduct(){
+    function removeProduct() {
         $q.notify({
             type: 'negative',
             message: 'Товар удален из корзины!!!'

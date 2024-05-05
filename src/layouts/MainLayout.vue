@@ -324,8 +324,6 @@
     data.value = Array.from(new Set([...searchArr, ...data.value]));
   })
   
-
-
   // -------- здесь код для проверки того залогинен юзер или нет
   const isLoggedIn = ref(false);
 
