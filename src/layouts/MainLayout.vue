@@ -136,7 +136,7 @@
 
     <!-- Чат -->
     <q-btn
-      @click="BotGreeting"
+      @click="botGreeting"
       class="icon-chat bg-primary"
       icon="chat"
     ></q-btn>
@@ -155,7 +155,7 @@
           <div class="scrollContainer" ref="scrollContainer">
             <q-chat-message
               class="q-ml-lg q-mr-lg"
-              v-for="(message, index) in Chat"
+              v-for="(message, index) in chat"
               :key="index"
               :name="message.name"
               :text="message.text"
@@ -168,14 +168,14 @@
         <q-card-section class="chat-footer row justify-between">
           <q-input
             class="col-9 q-ml-lg"
-            @keyup.enter="ChatPush"
+            @keyup.enter="chatPush"
             outlined
-            v-model="TextChat"
+            v-model="textChat"
             label="Ваше сообщение..."
           />
           <div class="col-1 q-mr-xl">
             <q-btn
-              @click="ChatPush"
+              @click="chatPush"
               size="lg"
               push
               color="primary"
@@ -244,32 +244,32 @@
 
   const scrollContainer = ref(null);
 
-  const TextChat = ref([""]);
-  const Chat = ref([]);
+  const textChat = ref([""]);
+  const chat = ref([]);
 
-  function BotGreeting() {
+  function botGreeting() {
     medium.value = true;
-    if (Chat.value.length === 0) {
+    if (chat.value.length === 0) {
       setTimeout(() => {
         let timeStamp = Date.now();
         let formattedString = date.formatDate(timeStamp, 'HH:mm:ss')
-        Chat.value.push({
+        chat.value.push({
           name: "Ваш покорный слуга ",
           text: ["Чем я могу вам помочь?"],
           stamp: formattedString,
           sent: false,
         });
-      }, "1000");
+      },1000);
     }
   }
 
-  function ChatPush() {
-    if (TextChat.value !== "") {
+  function chatPush() {
+    if (textChat.value !== "") {
       let timeStamp = Date.now();
         let formattedString = date.formatDate(timeStamp, 'HH:mm:ss')
-      Chat.value.push({
+      chat.value.push({
         name: "пользователь",
-        text: [TextChat.value],
+        text: [textChat.value],
         stamp: formattedString,
         sent: true,
       });
@@ -277,11 +277,11 @@
         if (scrollContainer.value) {
           scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
         }
-      }, "0");
+      }, 0);
       setTimeout(() => {
         let timeStamp = Date.now();
         let formattedString = date.formatDate(timeStamp, 'HH:mm:ss')
-        Chat.value.push({
+        chat.value.push({
           name: "Ваш покорный слуга ",
           text: [
             "Обратитесь по вашему вопросу на горячую линию по номеру телефона: 8-800-555-35-35",
@@ -289,15 +289,18 @@
           stamp: formattedString,
           sent: false,
         });
-      }, "1000");
+      }, 1000);
       setTimeout(() => {
         if (scrollContainer.value) {
           scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
         }
-      }, "1001");
-      TextChat.value = "";
+      }, 1001);
+      textChat.value = "";
     }
   }
+
+
+
 
   function toggleLeftDrawer () {
     leftDrawerOpen.value = !leftDrawerOpen.value
