@@ -134,6 +134,7 @@ const register = () => {
         userName: name.value,
         Cart: [],
         Fav: [],
+        Orders: [], //TODO-проверить? тут новая штука от Дениса 06.05
       });
     router.push('/') //редирект на главную
   })
