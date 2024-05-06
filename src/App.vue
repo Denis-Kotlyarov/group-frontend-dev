@@ -3,22 +3,20 @@
 </template>
 
 <script setup>
-  import { ref, onMounted } from 'vue';
+  import { ref } from 'vue';
   import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
   import { auth } from "src/firebase";
 
   const isLoggedIn = ref(false);
 
-  onMounted(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        isLoggedIn.value = true;
-      } else {
-        isLoggedIn.value = false;
-      }
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      isLoggedIn.value = true;
+    } else {
+      isLoggedIn.value = false;
+    }
 
-      localStorage.setItem('isLoggedIn', JSON.stringify(isLoggedIn.value))
-    });
+    localStorage.setItem('isLoggedIn', JSON.stringify(isLoggedIn.value))
   });
 </script>
 

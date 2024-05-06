@@ -1,5 +1,5 @@
 <template>
-  <q-card class="my-card">
+  <q-card class="my-card flex-break" @click="showMoreInfo = true">
     <div>
       <img :src="tovar.imgURL" class="card-img rounded-borders" />
       <div
@@ -11,7 +11,8 @@
           size="md"
           class="favorite-icon cursor-pointer"
           :class="favoriteToggler ? 'text-red-10' : 'text-grey-3'"
-          @click="AddToFavorites"
+          :disable="isLoggedIn === null"
+          @click.stop="addToFav"
         />
       </div>
     </div>
@@ -26,7 +27,7 @@
     </q-card-section>
 
     <q-card-section class="full-width">
-      <q-btn no-caps class="text-bold full-width" color="primary" label="В корзину" style="border-radius: 10px;" @click="showMoreInfo = true"/>
+      <q-btn no-caps class="text-bold full-width" color="primary" label="В корзину" style="border-radius: 10px;" @click.stop="addToCart"/>
     </q-card-section>
   </q-card>
 
@@ -88,6 +89,7 @@
                 rounded
                 color="primary"
                 label="В избранное"
+                @click="addToFav"
               />
             </div>
           </div>
@@ -112,7 +114,6 @@
   })
 
   const $q = useQuasar();
-
   // Избранное
   let favoriteToggler = ref(false)
   // Открытие popup
@@ -123,14 +124,32 @@
   // Проверка регистрации для работоспособности кнопок в окне
   let isLoggedIn = ref(getAuth().currentUser)
   onAuthStateChanged(auth, (user) => {
-  if (user) {
-    isLoggedIn.value = true;
-    email.value = auth.currentUser?.email.toString()
-  } else {
-    isLoggedIn.value = null;
-    email.value = ""
-  }
+    if (user) {
+      isLoggedIn.value = true;
+      email.value = auth.currentUser?.email.toString()
+    } else {
+      isLoggedIn.value = null;
+      email.value = ""
+    }
   });
+
+  async function addToFav() {
+    if (!favoriteToggler.value) {
+      await updateDoc(doc(db, "usersCartAndFav", email.value), {
+        Fav: arrayUnion({
+          id: props.tovar.id,
+        })
+      });
+    } else {
+      await updateDoc(doc(db, "usersCartAndFav", email.value), {
+        Fav: arrayRemove({
+          id: props.tovar.id,
+        })
+      });
+    }
+
+    NotificationAboutFav()
+  }
 
   async function addToCart() {
     await updateDoc(doc(db, "usersCartAndFav", email.value), {
@@ -139,16 +158,24 @@
       })
     });
 
-    AddToBasket()
+    NotificationAboutCart()
   }
 
   // функция срабатывающая при клике на "добавить в избранное"
-  function AddToFavorites() {
+  function NotificationAboutFav() {
     favoriteToggler.value = !favoriteToggler.value;
-    if (favoriteToggler.value !== false) {
+    if (favoriteToggler.value) {
       return $q.notify({
         message: "Товар добавлен в избранное!",
         color: "primary",
+        badgeColor: "negative",
+        badgeTextColor: "dark",
+        badgeClass: "shadow-3 glossy my-badge-class",
+      });
+    } else {
+      return $q.notify({
+        message: "Товар удален из избранного!",
+        color: "negative",
         badgeColor: "negative",
         badgeTextColor: "dark",
         badgeClass: "shadow-3 glossy my-badge-class",
@@ -157,7 +184,7 @@
   }
 
   // функция срабатывающая при клике на "добавить в корзину"
-  function AddToBasket() {
+  function NotificationAboutCart() {
     $q.notify({
       message: "Товар в корзине!",
       color: "primary",
