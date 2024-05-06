@@ -131,7 +131,9 @@
 
     <!-- Содержимое layout -->
     <q-page-container :class="$route.fullPath === '/search' ? '' : 'bg-secondary'">
-      <router-view />
+      <keep-alive>
+        <router-view />
+      </keep-alive>
     </q-page-container>
 
     <!-- Чат -->

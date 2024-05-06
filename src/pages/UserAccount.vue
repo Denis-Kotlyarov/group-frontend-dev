@@ -15,8 +15,8 @@
           <img src="https://cdn.quasar.dev/img/avatar.png" />
         </q-avatar>
         <div>
-          <p class="text-h6" :class="$q.screen.width <= 880 ? 'q-mb-none' : ''">Юзер Юзерович</p>
-          <p class="text-h7" :class="$q.screen.width <= 880 ? 'q-mb-none' : ''">1234567890@mail.ru</p>
+          <p class="text-h6" :class="$q.screen.width <= 880 ? 'q-mb-none' : ''">{{ nameOfUser }}</p>
+          <p class="text-h7" :class="$q.screen.width <= 880 ? 'q-mb-none' : ''">{{ email }}</p>
           <q-btn class="q-mt-lg" color="primary" label="Редактировать" />
         </div>
       </div>
@@ -27,8 +27,8 @@
         <span>Заказы</span>
       </div>
       <div
-        v-for="i in 5"
-        :key="i"
+        v-for="order in arrOfOrders"
+        :key="order.id"
         class="bg-white q-mb-lg card-custom-style shadow-5"
       >
         <div v-if="purchasedItem.length">
@@ -46,7 +46,7 @@
                   Получен
                 </div>
               </div>
-              <div class="text-subtitle2" :class="$q.screen.width <= 660 ? 'text-center' : ''">Дата покупки: 11.11.24</div>
+              <div class="text-subtitle2" :class="$q.screen.width <= 660 ? 'text-center' : ''">Дата покупки: {{ order.zakazTime }}</div>
             </div>
             <div class="col text-right">
               <q-img
@@ -60,7 +60,7 @@
               />
             </div>
             <div class="text-subtitle2 col-2 text-right" v-show="$q.screen.width >= 390">
-              Оплачено <span class="text-h6">1399р</span>
+              Оплачено <span class="text-h6">{{ order.sum }}₽</span>
             </div>
           </q-card-section>
         </div>
@@ -89,10 +89,12 @@ defineOptions({
   name: "UserAccount",
 });
 
-import { ref } from "vue"
+import { ref, onBeforeMount } from "vue";
+import { collection, getDoc, getDocs, doc, arrayRemove, updateDoc, arrayUnion, setDoc, query, where } from "firebase/firestore";
+import { auth, db } from "src/firebase";
 import { useQuasar } from 'quasar';
-const $q = useQuasar()
 
+const $q = useQuasar()
 const purchasedItem = ref([
   {
     id: 1,
@@ -100,6 +102,40 @@ const purchasedItem = ref([
     name: "Кроссовки",
   },
 ]);
+
+const userData = ref([])
+const nameOfUser = ref()
+const arrOfOrders = ref([])
+const email = auth.currentUser?.email.toString()
+onBeforeMount(async () => {
+  userData.value = (await getDoc(doc(db, "usersCartAndFav", email))).data("Orders");
+  nameOfUser.value = userData.value.userName
+  userData.value = userData.value.Orders
+  //console.log(userData.value);
+
+  const querySnapshot = await getDocs(collection(db, "usersOrders"));
+  querySnapshot.forEach((doc) => {
+    arrOfOrders.value.push(
+        {
+          id: doc.id,
+          ...doc.data()
+        }
+      )
+  })
+  //console.log(arrOfOrders.value)
+
+  arrOfOrders.value = arrOfOrders.value.filter((item) => {
+    let temp = userData.value.find((el) => {
+      if (el.id === item.id) {
+        return true
+      }
+    })
+    if (temp) {
+      return true
+    }
+  })
+  console.log(arrOfOrders.value)
+})
 </script>
 
 <style lang="sass" scoped>

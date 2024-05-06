@@ -9,6 +9,7 @@ const routes = [
       { path: '/basket', component: () => import('src/pages/Basket.vue') },
       { path: '/popap', component: () => import('src/pages/PopAp.vue') },
       { path: '/favpage', component: () => import('src/pages/FavPage.vue') },
+      { path: '/noinpopup', component: () => import('src/components/NoInPopup.vue'), props: true },
     ]
   },
 
