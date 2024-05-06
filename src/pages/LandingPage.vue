@@ -189,7 +189,7 @@ onMounted( async () => {
   })
 })
 
-// //Генератор рандомных товаров @click="addTodo"
+// //Генератор рандомных товаров @click="addTodo"---
 // import { onMounted } from "vue";
 //
 //
