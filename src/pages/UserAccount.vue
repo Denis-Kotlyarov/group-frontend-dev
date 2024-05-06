@@ -31,7 +31,7 @@
         :key="order.id"
         class="bg-white q-mb-lg card-custom-style shadow-5"
       >
-        <div v-if="purchasedItem.length">
+        <div v-if="arrOfOrders.length">
           <q-card-section class="row justify-between">
             <div class="col">
               <div 
@@ -66,7 +66,7 @@
         </div>
       </div>
       <div
-        v-if="!purchasedItem.length"
+        v-if="!arrOfOrders.length"
         class="basket-pagebasket-empty basket-empty"
       >
         <div class="basket-emptywrap text-center">
@@ -95,13 +95,6 @@ import { auth, db } from "src/firebase";
 import { useQuasar } from 'quasar';
 
 const $q = useQuasar()
-const purchasedItem = ref([
-  {
-    id: 1,
-    price: 1000,
-    name: "Кроссовки",
-  },
-]);
 
 const userData = ref([])
 const nameOfUser = ref()
