@@ -15,8 +15,8 @@
           <img src="https://cdn.quasar.dev/img/avatar.png" />
         </q-avatar>
         <div>
-          <p class="text-h6" :class="$q.screen.width <= 880 ? 'q-mb-none' : ''">Юзер Юзерович</p>
-          <p class="text-h7" :class="$q.screen.width <= 880 ? 'q-mb-none' : ''">1234567890@mail.ru</p>
+          <p class="text-h6" :class="$q.screen.width <= 880 ? 'q-mb-none' : ''">{{ }}</p>
+          <p class="text-h7" :class="$q.screen.width <= 880 ? 'q-mb-none' : ''">{{ }}</p>
           <q-btn class="q-mt-lg" color="primary" label="Редактировать" />
         </div>
       </div>
@@ -89,8 +89,21 @@ defineOptions({
   name: "UserAccount",
 });
 
-import { ref } from "vue"
+import { onMounted, ref } from "vue";
 import { useQuasar } from 'quasar';
+import {
+  collection,
+  onSnapshot,
+  addDoc,
+  doc,
+  deleteDoc,
+  updateDoc,
+  query,
+  orderBy,
+  limit,
+  getDocs,
+} from "firebase/firestore";
+import { db, auth } from "src/firebase";
 const $q = useQuasar()
 
 const purchasedItem = ref([
@@ -100,6 +113,21 @@ const purchasedItem = ref([
     name: "Кроссовки",
   },
 ]);
+
+
+onMounted( async () => {
+        const querySnapshot = await getDocs(collection(db, "usersCartAndFav"));
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            data.value.push(
+                {
+                    id: doc.id,
+                    ...doc.data()
+                }
+            )
+        });
+        console.log(data);
+    })
 </script>
 
 <style lang="sass" scoped>
