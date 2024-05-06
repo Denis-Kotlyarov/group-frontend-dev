@@ -168,8 +168,18 @@ const data = ref([])
 const datalimit2 = ref([])
 
 onMounted( async () => {
-  const querySnapshot = await getDocs(query(collection(db, "tovari"), limit(2)));
+  const querySnapshot = await getDocs(query(collection(db, "tovari")));
   querySnapshot.forEach((doc) => {
+    data.value.push(
+      {
+        id: doc.id,
+        ...doc.data()
+      }
+    )
+  })
+
+  const q = await getDocs(query(collection(db, "tovari"), limit(2)));
+  q.forEach((doc) => {
     datalimit2.value.push(
       {
         id: doc.id,

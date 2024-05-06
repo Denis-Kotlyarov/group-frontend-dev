@@ -131,7 +131,9 @@
 
     <!-- Содержимое layout -->
     <q-page-container :class="$route.fullPath === '/search' ? '' : 'bg-secondary'">
-      <router-view />
+      <keep-alive>
+        <router-view />
+      </keep-alive>
     </q-page-container>
 
     <!-- Чат -->
@@ -325,8 +327,6 @@
     data.value = Array.from(new Set([...searchArr, ...data.value]));
   })
   
-
-
   // -------- здесь код для проверки того залогинен юзер или нет
   const isLoggedIn = ref(false);
 

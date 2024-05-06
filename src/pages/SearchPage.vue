@@ -18,7 +18,7 @@
     </div>
 
     <div class="cont flex q-gutter-x-md q-gutter-y-md q-mt-md" :class="$q.screen.width <= 739 ? 'flex-center' : ''">
-        <card-component class="" v-for="tovar in data" :key="tovar.id" :tovar="tovar"/>
+        <card-component v-for="tovar in data" :key="tovar.id" :tovar="tovar"/>
     </div>
 </template>
 
@@ -62,25 +62,25 @@
     }
 
     async function fillterData(modelForFB) {
-        // const querySnapshot = await getDocs(query(collection(db, "tovari"), orderBy(modelForFB)));
-        // let tempArr = []
-        // querySnapshot.forEach((doc) => {
-        //     tempArr.push(
-        //         {
-        //             id: doc.id,
-        //             ...doc.data()
-        //         }
-        //     )
-        // })
-        // data.value = tempArr
+        const querySnapshot = await getDocs(query(collection(db, "tovari"), orderBy(modelForFB)));
+        let tempArr = []
+        querySnapshot.forEach((doc) => {
+            tempArr.push(
+                {
+                    id: doc.id,
+                    ...doc.data()
+                }
+            )
+        })
+        data.value = tempArr
         
-        if (modelForFB === 'name' || modelForFB === 'type') {
-            data.value.sort((item1, item2) => item1[modelForFB].localeCompare(item2[modelForFB]));
-            //console.log(data.value)
-        } else {
-            data.value.sort((item1, item2) => item1[modelForFB] - item2[modelForFB]);
-            //console.log(data.value)
-        }
+        // if (modelForFB === 'name' || modelForFB === 'type') {
+        //     data.value.sort((item1, item2) => item1[modelForFB].localeCompare(item2[modelForFB]));
+        //     //console.log(data.value)
+        // } else {
+        //     data.value.sort((item1, item2) => item1[modelForFB] - item2[modelForFB]);
+        //     //console.log(data.value)
+        // }
     }
     
     async function clearFillter() {
