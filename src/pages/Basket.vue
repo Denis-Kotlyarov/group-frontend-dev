@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" v-if="basketArr.length">
         <!-- Корзина загаловок -->
         <h4 class="q-py-xs q-px-xl">Корзина</h4>
 
@@ -55,6 +55,20 @@
             </div>
 
         </q-page>
+    </div>
+
+    <div
+        v-else
+        class="basket-pagebasket-empty basket-empty q-mt-xl"
+    >
+        <div class="basket-emptywrap text-center">
+            <q-icon name="shopping_cart" size="6em" color="grey-5" />
+            <div class="basket-content_title text-h6">История заказов пуста</div>
+            <p class="q-pt-md">
+                Загляните на главную, чтобы выбрать товары или найдите нужное в поиске
+            </p>
+            <q-btn to="/" color="positive" label="Перейти на главную" />
+        </div>
     </div>
 
     <!-- popup уведомление о  покупке товара -->
