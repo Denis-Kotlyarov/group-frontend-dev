@@ -12,11 +12,9 @@
       <div class="comm1-item">
         <div class="flex flex-center q-gutter-x-md q-gutter-y-md q-mt-md">
           <card-component
-            class=""
             v-for="tovar in datalimit2"
             :key="tovar.id"
             :tovar="tovar"
-            style="max-width: 180px"
           />
         </div>
       </div>
@@ -75,7 +73,6 @@
       <div class="flex flex-center q-gutter-x-md q-gutter-y-md q-mt-md">
         <!-- див с товарами -->
         <card-component
-          class=""
           v-for="tovar in data"
           :key="tovar.id"
           :tovar="tovar"

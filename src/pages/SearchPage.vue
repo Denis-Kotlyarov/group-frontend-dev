@@ -17,7 +17,7 @@
         </div>
     </div>
 
-    <div class="cont flex q-gutter-x-md q-gutter-y-md q-mt-md" :class="$q.screen.width <= 739 ? 'flex-center' : ''">
+    <div class="cont flex flex-center q-gutter-x-md q-gutter-y-md q-mt-md" :class="$q.screen.width <= 739 ? 'flex-center' : ''">
         <card-component v-for="tovar in data" :key="tovar.id" :tovar="tovar"/>
     </div>
 </template>
