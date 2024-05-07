@@ -2,11 +2,10 @@
     <div class="container">
         <div class="flex flex-center q-gutter-x-md q-gutter-y-md q-mt-md">
             <card-component
-          class=""
-          v-for="tovar in data"
-          :key="tovar.id"
-          :tovar="tovar"
-        />
+                v-for="tovar in data"
+                :key="tovar.id"
+                :tovar="tovar"
+            />
         </div>
     </div>
 </template>
