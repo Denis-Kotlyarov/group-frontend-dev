@@ -38,7 +38,12 @@
         'По популярности',
         'По популярности',
         'По популярности',
-    ])    
+    ]) 
+    
+    watch(searchText, async () => {
+        let searchArr = data.value.filter((item) => item.name.toLowerCase().includes(searchText.value.toLowerCase()))
+        data.value = Array.from(new Set([...searchArr, ...data.value]));
+    })
 </script>
 
 <style>
