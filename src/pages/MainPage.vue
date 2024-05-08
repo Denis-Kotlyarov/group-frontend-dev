@@ -30,6 +30,7 @@
     import { useQuasar } from 'quasar';
     import { ref } from 'vue';
 
+    const searchText = ref('')
     const $q = useQuasar()
     const model = ref(null)
     const options = ref([
