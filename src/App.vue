@@ -20,6 +20,8 @@
 
     if (auth.currentUser?.email.toString() !== undefined) {
       localStorage.setItem('mail', JSON.stringify(auth.currentUser?.email.toString()))
+    } else {
+      localStorage.setItem('mail', JSON.stringify(''))
     }
   });
 </script>
