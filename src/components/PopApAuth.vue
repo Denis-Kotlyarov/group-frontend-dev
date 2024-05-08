@@ -6,7 +6,7 @@
     <div class="bg-white">
       <div class="text-center q-ma-xl">
         <p class="text-h2 text-primary">FANSYMAG</p>
-        <p class="text-h3">Авторизация</p>
+        <p class="text-h4">Авторизация</p>
         <p class="text-h7 q-mt-md ">
           Для авторизации на сервисе Вам необходимо ввести свою почту и пароль.
           Если вы еще не зарегистрированы, то вы можете создать аккаунт.
@@ -53,7 +53,7 @@
     <div class="bg-white">
       <div class="text-center q-ma-xl">
         <p class="text-h2 text-primary">FANSYMAG</p>
-        <p class="text-h3">Регистрация</p>
+        <p class="text-h4">Регистрация</p>
         <p class="text-h7 q-mt-md">
           Для авторизации на сервисе Вам необходимо ввести свою почту и пароль.
           Если вы еще не зарегистрированы, то вы можете создать аккаунт.
