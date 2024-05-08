@@ -29,6 +29,7 @@
             v-model="passwordSignIn"
             label="Введите пароль"
             lazy-rules
+            type="password"
             :rules="[
               (val) =>
                 (val && val.length > 0) || 'Пожалуйста, напишите что-нибудь',
@@ -86,6 +87,7 @@
             v-model="password"
             label="Введите пароль"
             lazy-rules
+            type="password"
             :rules="[
               (val) =>
                 (val && val.length > 0) || 'Пожалуйста, напишите что-нибудь',
