@@ -4,7 +4,7 @@
         <div class="q-mb-lg search-container">
             <q-input bg-color="white" placeholder="Поиск" v-model="searchText" class="text-black text-body1"
                 color="black">
-                <template v-slot:append>
+                <template>
                     <q-btn round dense flat icon="search" />
                 </template>
             </q-input>
