@@ -7,11 +7,11 @@
       <div class="text-center q-ma-xl">
         <p class="text-h2 text-primary">FANSYMAG</p>
         <p class="text-h3">Авторизация</p>
-        <p class="text-h7 q-mt-md">
+        <p class="text-h7 q-mt-md ">
           Для авторизации на сервисе Вам необходимо ввести свою почту и пароль.
           Если вы еще не зарегистрированы, то вы можете создать аккаунт.
         </p>
-        <q-form @submit="onSubmit" class="q-gutter-md q-mt-md">
+        <q-form @submit="onSubmit" class="">
           <q-input
             class="q-mb-md"
             outlined
@@ -38,7 +38,7 @@
             @click="signin"
             class="button-length q-mb-xl"
             unelevated
-            rounded
+            style="border-radius: 10px;"
             color="primary"
             label="Войти"
             type="submit"
@@ -57,7 +57,7 @@
           Для авторизации на сервисе Вам необходимо ввести свою почту и пароль.
           Если вы еще не зарегистрированы, то вы можете создать аккаунт.
         </p>
-        <q-form @submit="onSubmit" class="q-gutter-md q-mt-md">
+        <q-form @submit="onSubmit" class="" style="width: 100%;">
           <q-input
             class="q-mb-md"
             outlined
@@ -95,7 +95,7 @@
             @click="register"
             class="button-length q-mb-xl"
             unelevated
-            rounded
+            style="border-radius: 10px;"
             color="primary"
             label="Зарегистрироваться"
             type="submit"
@@ -104,8 +104,8 @@
       </div>
     </div>
   </div>
-  <q-btn class="button-length" style="width: 100%;" flat rounded color="primary" label="Или зарегистрируйтесь" @click="toggleDivs" v-show="showDiv1"></q-btn>
-  <q-btn class="button-length" style="width: 100%;" flat rounded color="primary" label="Или авторизуйтесь" @click="toggleDivs" v-show="showDiv2"></q-btn>
+  <q-btn class="button-length authpopap-switch bottom-xs" style="width: 100%;" flat  color="primary" label="Или зарегистрируйтесь" @click="toggleDivs" v-show="showDiv1"></q-btn>
+  <q-btn class="button-length authpopap-switch bottom-xs" style="width: 100%;" flat  color="primary" label="Или авторизуйтесь" @click="toggleDivs" v-show="showDiv2"></q-btn>
 </div>
 </template>
 
@@ -196,44 +196,64 @@ const toggleDivs = () => {
 };
 </script>
 
-<style lang="sass" scoped>
+<style lang="scss" scoped>
 //стили к pop-ap регистрации
 
-.pop-ap-registration-container
-  width: 513px
-  height: 800px
-  border-radius: 20px
+.pop-ap-registration-container{
+  width: 513px;
+  height: 800px;
+  border-radius: 20px;
 
-.button-length
-  width: 100%
+}
+
+.button-length{
+  width: 100%;
+}
 
 //закончились стили к pop-ap
 
 //стили к pop-ap карточки товаров
 
-.general-box-for-pop-ap-product-cards
-  height: 90%
-  width: 100%
+.general-box-for-pop-ap-product-cards{
+  height: 90%;
+  width: 100%;
+}
 
-.pop-up-product-card-container
-  height: 800px
-  border-radius: 50px
 
-.img-pop-ap-product-cards
-  height: 90%
-  width: 90%
-  border-radius: 20px
-.description-box
-  height: 80%
-  width: 100%
-  border-radius: 20px
-.add-to-cart-box
-  height: 30%
-  width: 80%
-  border-radius: 20px
-.title-box
-  height: 20%
-  width: 100%
+.pop-up-product-card-container{
+  height: 800px;
+  border-radius: 50px;
+}
+
+
+.img-pop-ap-product-cards{
+  height: 90%;
+  width: 90%;
+  border-radius: 20px;
+}
+
+.description-box{
+  height: 80%;
+  width: 100%;
+  border-radius: 20px;
+}
+
+.add-to-cart-box{
+  height: 30%;
+  width: 80%;
+  border-radius: 20px;
+}
+
+.title-box{
+  height: 20%;
+  width: 100%;
+}
+
+
+.authpopap-switch{
+  align-self: flex-end;
+}
+
 
 // POPAP ВЫДАЧА ТОВАРОВ ИЗ ПОИСКА 
 </style>
