@@ -26,34 +26,17 @@
           </div>
 
           <!-- Контейнер для поиска -->
-          <div
-            class="q-px-md q-py-xs q-my-md q-mx-md bg-white col search-container popup-z"
-          >
-            <q-input
-              borderless
-              bg-color="white"
-              placeholder="Поиск"
-              v-model="searchText"
-              class="text-black text-body1 popup-z"
-              color="black"
-              @click="popup = true"
-            >
+          <div class="q-px-md q-py-xs q-my-md q-mx-md bg-white col search-container popup-z">
+            <q-input borderless bg-color="white" placeholder="Поиск" v-model="searchText" class="text-black text-body1 popup-z" color="black" @click="popup=true">
               <template v-slot:append>
-                <q-btn round dense flat icon="search" clickable to="/search" />
+                <q-btn round dense flat icon="search" clickable to="/search"/>
               </template>
             </q-input>
 
             <!-- popua для поиска -------------------------------------------------------------------------------------------->
             <div class="bg-white seach-popup" v-if="popup">
-              <div
-                class="flex flex-center q-gutter-x-md q-gutter-y-md q-mt-md scroll-popup-search"
-              >
-                <card-component
-                  class=""
-                  v-for="tovar in data"
-                  :key="tovar.id"
-                  :tovar="tovar"
-                />
+              <div class="flex flex-center q-gutter-x-md q-gutter-y-md q-mt-md scroll-popup-search">
+                <card-component class="" v-for="tovar in data" :key="tovar.id" :tovar="tovar"/>
               </div>
             </div>
           </div>
@@ -74,12 +57,12 @@
               <q-item-label class=""> Кабинет </q-item-label>
             </q-item>
 
-            <q-item
-              class="flex column items-center q-gutter-y-sm rounded-borders"
-              clickable
-              v-ripple
-              to="/favpage"
-              avatar
+            <q-item 
+              class="flex column items-center q-gutter-y-sm rounded-borders" 
+              clickable 
+              v-ripple 
+              to="/favpage" 
+              avatar 
               exact
             >
               <q-icon name="grade" size="md" />
@@ -100,7 +83,8 @@
           </div>
 
           <!-- popua для поиска -------------------------------------------------------------------------------------------->
-          <div class="popup-bg" v-if="popup" @click="popup = false"></div>
+          <div class="popup-bg" v-if="popup" @click="popup=false"></div>
+
         </q-toolbar>
       </div>
     </q-header>
@@ -146,9 +130,7 @@
     </q-drawer>
 
     <!-- Содержимое layout -->
-    <q-page-container
-      :class="$route.fullPath === '/search' ? '' : 'bg-secondary'"
-    >
+    <q-page-container :class="$route.fullPath === '/search' ? '' : 'bg-secondary'">
       <keep-alive>
         <router-view />
       </keep-alive>
@@ -159,7 +141,7 @@
       @click="botGreeting"
       class="icon-chat bg-primary"
       icon="chat"
-      style="color: white"
+      style="color: white;"
     ></q-btn>
 
     <!-- popup чата -->
@@ -232,9 +214,7 @@
               >
             </p>
           </q-item>
-          <q-btn @click="handleSignOut" v-if="isLoggedIn" to="/"
-            >Выйти из аккаунта</q-btn
-          >
+          <q-btn @click="handleSignOut" v-if="isLoggedIn" to="/">Выйти из аккаунта</q-btn>
         </q-toolbar>
       </div>
     </q-footer>
@@ -242,256 +222,257 @@
 </template>
 
 <script setup>
-import { useQuasar } from "quasar";
-import { ref, watch, onMounted } from "vue";
-import { useRoute } from "vue-router";
-import CardComponent from "src/components/CardComponent.vue";
-import { db, auth } from "src/firebase";
-import { collection, getDocs, query } from "firebase/firestore";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { date } from "quasar";
+  import { useQuasar } from 'quasar'
+  import { ref, watch, onMounted } from 'vue'
+  import { useRoute } from 'vue-router'
+  import CardComponent from 'src/components/CardComponent.vue';
+  import { db, auth } from 'src/firebase';
+  import { collection, getDocs, query } from "firebase/firestore";
+  import { onAuthStateChanged, signOut } from 'firebase/auth';
+  import { date } from 'quasar'
 
-defineOptions({
-  name: "MainLayout",
-});
-
-const $q = useQuasar();
-const $route = useRoute();
-
-const leftDrawerOpen = ref(false);
-const popup = ref(false);
-const medium = ref(false);
-
-const data = ref([]);
-const searchText = ref("");
-
-const scrollContainer = ref(null);
-
-const textChat = ref([""]);
-const chat = ref([]);
-
-function botGreeting() {
-  medium.value = true;
-  if (chat.value.length === 0) {
-    setTimeout(() => {
-      let timeStamp = Date.now();
-      let formattedString = date.formatDate(timeStamp, 'HH:mm:ss')
-      chat.value.push({
-        name: "Ваш покорный слуга ",
-        text: ["Чем я могу вам помочь?"],
-        stamp: formattedString,
-        sent: false,
-      });
-    },1000);
-  }
-}
-
-function chatPush() {
-  if (textChat.value !== "") {
-    let timeStamp = Date.now();
-      let formattedString = date.formatDate(timeStamp, 'HH:mm:ss')
-    chat.value.push({
-      name: "пользователь",
-      text: [textChat.value],
-      stamp: formattedString,
-      sent: true,
-    });
-    setTimeout(() => {
-      if (scrollContainer.value) {
-        scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
-      }
-    }, 0);
-    setTimeout(() => {
-      let timeStamp = Date.now();
-      let formattedString = date.formatDate(timeStamp, 'HH:mm:ss')
-      chat.value.push({
-        name: "Ваш покорный слуга ",
-        text: [
-          "Обратитесь по вашему вопросу на горячую линию по номеру телефона: 8-800-555-35-35",
-        ],
-        stamp: formattedString,
-        sent: false,
-      });
-    }, 1000);
-    setTimeout(() => {
-      if (scrollContainer.value) {
-        scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
-      }
-    }, 1001);
-    textChat.value = "";
-  }
-}
-
-
-
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
-}
-
-onMounted(async () => {
-  const querySnapshot = await getDocs(query(collection(db, "tovari")));
-  let tempArr = [];
-  querySnapshot.forEach((doc) => {
-    tempArr.push({
-      id: doc.id,
-      ...doc.data(),
-    });
+  defineOptions({
+    name: "MainLayout",
   });
-  data.value = tempArr;
-  console.log(data.value);
-});
 
-watch(searchText, async () => {
-  let searchArr = data.value.filter((item) =>
-    item.name.toLowerCase().includes(searchText.value.toLowerCase())
-  );
-  console.log(searchArr);
-  data.value = Array.from(new Set([...searchArr, ...data.value]));
-});
+  const $q = useQuasar();
+  const $route = useRoute();
 
-// -------- здесь код для проверки того залогинен юзер или нет
-const isLoggedIn = ref(false);
+  const leftDrawerOpen = ref(false);
+  const popup = ref(false);
+  const medium = ref(false);
 
-onMounted(() => {
-  onAuthStateChanged(auth, (user) => {
+  const data = ref([])
+  const searchText = ref('')
+
+  const scrollContainer = ref(null);
+
+  const textChat = ref([""]);
+  const chat = ref([]);
+
+  function botGreeting() {
+    medium.value = true;
+    if (chat.value.length === 0) {
+      setTimeout(() => {
+        let timeStamp = Date.now();
+        let formattedString = date.formatDate(timeStamp, 'HH:mm:ss')
+        chat.value.push({
+          name: "Ваш покорный слуга ",
+          text: ["Чем я могу вам помочь?"],
+          stamp: formattedString,
+          sent: false,
+        });
+      },1000);
+    }
+  }
+
+  function chatPush() {
+    if (textChat.value !== "") {
+      let timeStamp = Date.now();
+        let formattedString = date.formatDate(timeStamp, 'HH:mm:ss')
+      chat.value.push({
+        name: "пользователь",
+        text: [textChat.value],
+        stamp: formattedString,
+        sent: true,
+      });
+      setTimeout(() => {
+        if (scrollContainer.value) {
+          scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
+        }
+      }, 0);
+      setTimeout(() => {
+        let timeStamp = Date.now();
+        let formattedString = date.formatDate(timeStamp, 'HH:mm:ss')
+        chat.value.push({
+          name: "Ваш покорный слуга ",
+          text: [
+            "Обратитесь по вашему вопросу на горячую линию по номеру телефона: 8-800-555-35-35",
+          ],
+          stamp: formattedString,
+          sent: false,
+        });
+      }, 1000);
+      setTimeout(() => {
+        if (scrollContainer.value) {
+          scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
+        }
+      }, 1001);
+      textChat.value = "";
+    }
+  }
+
+
+
+
+  function toggleLeftDrawer () {
+    leftDrawerOpen.value = !leftDrawerOpen.value
+  }
+
+  onMounted(async () => {
+    const querySnapshot = await getDocs(query(collection(db, "tovari")));
+    let tempArr = []
+    querySnapshot.forEach((doc) => {
+      tempArr.push(
+        {
+          id: doc.id,
+          ...doc.data()
+        }
+      )
+    });
+    data.value = tempArr
+    console.log(data.value)
+  })
+
+  watch(searchText, async () => {
+    let searchArr = data.value.filter((item) => item.name.toLowerCase().includes(searchText.value.toLowerCase()))
+    console.log(searchArr)
+    data.value = Array.from(new Set([...searchArr, ...data.value]));
+  })
+  
+  // -------- здесь код для проверки того залогинен юзер или нет
+  const isLoggedIn = ref(false);
+
+  onMounted(() => {
+    onAuthStateChanged(auth, (user) => {
     if (user) {
       isLoggedIn.value = true;
-      console.log("MainLayout говорит - Юзер залогинен");
+      console.log('MainLayout говорит - Юзер залогинен')
     } else {
       isLoggedIn.value = false;
-      console.log("MainLayout говорит - Юзер НЕ! залогинен");
+      console.log('MainLayout говорит - Юзер НЕ! залогинен')
     }
+    });
   });
-});
 
-const handleSignOut = () => {
-  signOut(auth).then(() => {
+  const handleSignOut = () =>{
+    signOut(auth).then(() =>{
     // router.push("/");
-  });
-};
+    });
+  };
 </script>
 
 <style scoped lang="scss">
-.search-container {
-  width: 48%;
-  border-radius: 20px;
-  position: relative;
-}
-.popup {
-  position: absolute;
-  left: 0;
-  top: 80px;
-  padding: 12px;
-  height: 698px;
-  width: 100%;
-  border-radius: 20px;
-  z-index: 1000;
-}
-.popup-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.2);
-}
-.popup-z {
-  z-index: 1001;
-}
-.wrapper {
-  max-width: 1440px;
-  margin: 0 auto;
-}
-.header,
-.footer {
-  background: $main-gradient;
-}
-.list-title {
-  background: $main-gradient;
-  padding: 34px 15px;
-}
-.list-item {
-  transition: all 0.3s ease-in-out;
-}
-.list-item:hover {
-  background-color: #f5f5f5;
-}
-.active {
-  background-color: #f5f5f5;
-}
-.footer {
-  z-index: 400;
-}
+  .search-container {
+    width: 48%;
+    border-radius: 20px;
+    position: relative;
+  }
+  .popup {
+    position: absolute;
+    left: 0;
+    top: 80px;
+    padding: 12px;
+    height: 698px;
+    width: 100%;
+    border-radius: 20px;
+    z-index: 1000;
+  }
+  .popup-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.2);
+  }
+  .popup-z {
+    z-index: 1001;
+  }
+  .wrapper {
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+  .header,
+  .footer {
+    background: $main-gradient;
+  }
+  .list-title {
+    background: $main-gradient;
+    padding: 34px 15px;
+  }
+  .list-item {
+    transition: all 0.3s ease-in-out;
+  }
+  .list-item:hover {
+    background-color: #f5f5f5;
+  }
+  .active {
+    background-color: #f5f5f5;
+  }
+  .footer {
+    z-index: 400;
+  }
 
-//чат popup
-.icon-chat {
-  position: fixed;
-  right: 2%;
-  top: 90%;
-  z-index: 500;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-}
-.q-dialog__inner--minimized > div {
-  max-width: 800px;
-}
-.popup-chat-box {
-  position: relative;
-  width: 100%;
-  height: 80%;
-  border-radius: 50px;
-}
-.chat-card-test {
-  width: 100%;
-  height: 100%;
-}
-.chat-header {
-  // position: absolute;
-  // bottom: 0;
-  border-bottom: solid 2px;
-  border-color: $secondary;
-}
-.chat-footer {
-  position: absolute;
-  bottom: 2%;
-  left: 0;
-  width: 100%;
-  border-top: solid 2px;
-  border-color: $secondary;
-}
-.scrollContainer {
-  width: 100%;
-  max-height: calc(74vh - 200px);
-  overflow-y: auto;
-  pointer-events: all;
-  margin-left: auto;
-  margin-right: auto;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.scrollContainer::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-}
-.seach-popup {
-  position: absolute;
-  left: 0;
-  top: 80px;
-  padding: 12px;
-  width: 100%;
-  border-radius: 20px;
-  z-index: 1000;
-}
-.scroll-popup-search {
-  max-height: calc(100vh - 150px);
-  overflow-y: auto;
-  pointer-events: all;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.scroll-popup-search::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-}
+  //чат popup
+  .icon-chat {
+    position: fixed;
+    right: 2%;
+    top: 90%;
+    z-index: 500;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+  .q-dialog__inner--minimized > div {
+    max-width: 800px;
+  }
+  .popup-chat-box {
+    position: relative;
+    width: 100%;
+    height: 80%;
+    border-radius: 50px;
+  }
+  .chat-card-test {
+    width: 100%;
+    height: 100%;
+  }
+  .chat-header {
+    // position: absolute;
+    // bottom: 0;
+    border-bottom: solid 2px;
+    border-color: $secondary;
+  }
+  .chat-footer {
+    position: absolute;
+    bottom: 2%;
+    left: 0;
+    width: 100%;
+    border-top: solid  2px;
+    border-color: $secondary;
+  }
+  .scrollContainer {
+    width: 100%;
+    max-height: calc(74vh - 200px);
+    overflow-y: auto;
+    pointer-events: all;
+    margin-left: auto;
+    margin-right: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollContainer::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+  .seach-popup {
+    position: absolute;
+    left: 0;
+    top:80px;
+    padding: 12px;
+    width: 100%;
+    border-radius: 20px;
+    z-index: 1000;
+  }
+  .scroll-popup-search{
+    max-height: calc(100vh - 150px);
+     overflow-y: auto;
+      pointer-events: all;
+      -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scroll-popup-search::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
 </style>
