@@ -4,9 +4,9 @@
       <div class="comm1-item">
         <img
           class="round-15 img-100 col-6 col-md-4"
-          src="../assets/testcommS-1.webp"
+          src="../assets/New.jpeg"
           alt="comm"
-          style="max-width: 402px; flex-basis: 402px"
+          style="max-width: 250px; flex-basis: 150px"
         />
       </div>
       <div class="comm1-item">
@@ -21,9 +21,9 @@
       <div class="comm1-item">
         <img
           class="round-15 img-100 col-6 col-md-4"
-          src="../assets/testcommS-2.webp"
+          src="../assets/recom2.jpg"
           alt="comm"
-          style="max-width: 402px; flex-basis: 402px"
+          style="max-width: 250px; flex-basis: 150px"
         />
       </div>
     </div>
@@ -68,7 +68,7 @@
 
     <div class="flex-center landing-block q-pa-lg q-my-lg">
       <div>
-        <h4 class="text-weight-bold">Наши новинки</h4>
+        <h4 class="text-weight-bold text-center">Наши новинки</h4>
       </div>
       <div class="flex flex-center q-gutter-x-md q-gutter-y-md q-mt-md">
         <!-- див с товарами -->
@@ -104,7 +104,7 @@
       />
     </div>
     <q-dialog v-model="popUpRegistration"><PopApAuth/></q-dialog>
-    
+
 
   </div>
 </template>
