@@ -1,14 +1,6 @@
 <template>
     <div class="container">
         <h6 v-if="true" class="q-mb-lg">Запрос который ввел пользователь в строке поиска...</h6>
-        <div class="q-mb-lg search-container">
-            <q-input bg-color="white" placeholder="Поиск" v-model="searchText" class="text-black text-body1"
-                color="black">
-                <template v-slot:append>
-                    <q-btn round dense flat icon="search" />
-                </template>
-            </q-input>
-        </div>
         <div v-if="$q.screen.width >= 880" class="btns-container flex q-gutter-x-md q-gutter-y-md q-mb-lg text-h3">
             <q-btn label="По популярности" no-caps class="text-subtitle1" />
             <q-btn label="По популярности" no-caps class="text-subtitle1" />
@@ -30,7 +22,6 @@
     import { useQuasar } from 'quasar';
     import { ref } from 'vue';
 
-    const searchText = ref('')
     const $q = useQuasar()
     const model = ref(null)
     const options = ref([
@@ -39,11 +30,6 @@
         'По популярности',
         'По популярности',
     ]) 
-    
-    watch(searchText, async () => {
-        let searchArr = data.value.filter((item) => item.name.toLowerCase().includes(searchText.value.toLowerCase()))
-        data.value = Array.from(new Set([...searchArr, ...data.value]));
-    })
 </script>
 
 <style>

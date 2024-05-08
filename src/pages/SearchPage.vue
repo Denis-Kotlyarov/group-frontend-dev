@@ -1,6 +1,14 @@
 <template>
     <div class="container">
         <h6 v-if="true" class="q-mb-lg"></h6>
+        <div class="q-mb-lg search-container">
+            <q-input bg-color="white" placeholder="Поиск" v-model="searchText" class="text-black text-body1"
+                color="black">
+                <template v-slot:append>
+                    <q-btn round dense flat icon="search" />
+                </template>
+            </q-input>
+        </div>
         <div v-if="$q.screen.width >= 880" class="btns-container flex items-center no-wrap q-gutter-x-md q-gutter-y-md q-mb-lg text-h3">
             <q-btn label="По популярности" no-caps class="text-subtitle1" @click="typeOfFillter = 'По популярности'"/>
             <q-btn label="По цене" no-caps class="text-subtitle1" @click="typeOfFillter = 'По цене'"/>
@@ -10,7 +18,7 @@
 
             <q-icon name="close" size="md" class="q-ml-md cursor-pointer" v-ripple @click="clearFillter"/>
         </div>
-        
+
         <div v-else class="row flex-center q-mb-md no-wrap">
             <q-select standout v-model="typeOfFillter" :options="options" label="Фильтр" bg-color="secondary" color="black" class="full-width"/>
             <q-icon name="close" size="md" class="q-ml-md cursor-pointer" v-ripple @click="clearFillter"/>
@@ -42,6 +50,7 @@
     ])
     
     const data = ref([])
+    const searchText = ref('')
 
     onMounted( async () => {
         getData()
@@ -88,6 +97,11 @@
         typeOfFillter.value = ""
     }
 
+    watch(searchText, async () => {
+        let searchArr = data.value.filter((item) => item.name.toLowerCase().includes(searchText.value.toLowerCase()))
+        data.value = Array.from(new Set([...searchArr, ...data.value]));
+    })
+
     watch(typeOfFillter, () => {
         switch (typeOfFillter.value) {
             case 'По популярности':
@@ -123,5 +137,8 @@
     .cont {
         width: 80%;
         margin: 0 auto;
+    }
+    .search-container {
+        width: 76%;
     }
 </style>
