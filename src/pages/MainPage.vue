@@ -1,17 +1,26 @@
 <template>
     <div class="container">
         <h6 v-if="true" class="q-mb-lg">Запрос который ввел пользователь в строке поиска...</h6>
+        <div class="q-mb-lg search-container">
+            <q-input bg-color="white" placeholder="Поиск" v-model="searchText" class="text-black text-body1"
+                color="black">
+                <template v-slot:append>
+                    <q-btn round dense flat icon="search" />
+                </template>
+            </q-input>
+        </div>
         <div v-if="$q.screen.width >= 880" class="btns-container flex q-gutter-x-md q-gutter-y-md q-mb-lg text-h3">
-            <q-btn label="По популярности" no-caps class="text-subtitle1"/>
-            <q-btn label="По популярности" no-caps class="text-subtitle1"/>
-            <q-btn label="По популярности" no-caps class="text-subtitle1"/>
-            <q-btn label="По популярности" no-caps class="text-subtitle1"/>
+            <q-btn label="По популярности" no-caps class="text-subtitle1" />
+            <q-btn label="По популярности" no-caps class="text-subtitle1" />
+            <q-btn label="По популярности" no-caps class="text-subtitle1" />
+            <q-btn label="По популярности" no-caps class="text-subtitle1" />
         </div>
 
-        <q-select v-else standout v-model="model" :options="options" label="Фильтр" bg-color="secondary" color="black"/>
+        <q-select v-else standout v-model="model" :options="options" label="Фильтр" bg-color="secondary"
+            color="black" />
 
         <div class="flex flex-center q-gutter-x-md q-gutter-y-md q-mt-md">
-            <card-component class="" v-for="n in 10" :key="n"/>
+            <card-component class="" v-for="n in 10" :key="n" />
         </div>
     </div>
 </template>
