@@ -15,9 +15,9 @@
           <img src="https://cdn.quasar.dev/img/avatar.png" />
         </q-avatar>
         <div>
-          <p class="text-h6" :class="$q.screen.width <= 880 ? 'q-mb-none' : ''">{{ nameOfUser }}</p>
+          <p class="text-h6" :class="$q.screen.width <= 880 ? 'q-mb-none' : ''">{{ userData.userName }}</p>
           <p class="text-h7" :class="$q.screen.width <= 880 ? 'q-mb-none' : ''">{{ email }}</p>
-          <q-btn class="q-mt-lg" color="primary" label="Редактировать" />
+          <q-btn @click="handleSignOut" v-if="isLoggedIn" to="/">Выйти из аккаунта</q-btn>
         </div>
       </div>
     </div>
@@ -27,11 +27,11 @@
         <span>Заказы</span>
       </div>
       <div
-        v-for="order in arrOfOrders"
+        v-for="order in ordersArr"
         :key="order.id"
         class="bg-white q-mb-lg card-custom-style shadow-5"
       >
-        <div v-if="arrOfOrders.length">
+        <div v-if="ordersArr.length">
           <q-card-section class="row justify-between">
             <div class="col">
               <div 
@@ -52,11 +52,11 @@
               <q-img
                 v-show="$q.screen.width >= 661"
                 class="img-custom-style"
-                src="https://loremflickr.com/640/360"
+                :src="order.imgURL"
               />
               <q-img
                 class="q-ml-lg img-custom-style"
-                src="https://loremflickr.com/640/360"
+                :src="order.imgURL"
               />
             </div>
             <div class="text-subtitle2 col-2 text-right" v-show="$q.screen.width >= 390">
@@ -66,7 +66,7 @@
         </div>
       </div>
       <div
-        v-if="!arrOfOrders.length"
+        v-if="!ordersArr.length"
         class="basket-pagebasket-empty basket-empty"
       >
         <div class="basket-emptywrap text-center">
@@ -89,46 +89,76 @@ defineOptions({
   name: "UserAccount",
 });
 
-import { ref, onBeforeMount } from "vue";
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { ref, onMounted, onBeforeMount } from "vue";
 import { collection, getDoc, getDocs, doc, arrayRemove, updateDoc, arrayUnion, setDoc, query, where } from "firebase/firestore";
 import { auth, db } from "src/firebase";
 import { useQuasar } from 'quasar';
 
+//Получение экрана
 const $q = useQuasar()
 
+//Инф. user
 const userData = ref([])
-const nameOfUser = ref()
-const arrOfOrders = ref([])
-const email = auth.currentUser?.email.toString()
-onBeforeMount(async () => {
-  userData.value = (await getDoc(doc(db, "usersCartAndFav", email))).data("Orders");
-  nameOfUser.value = userData.value.userName
-  userData.value = userData.value.Orders
-  //console.log(userData.value);
+//Массив заказов
+const ordersArr = ref([])
+//Догадаетесь...?
+const email = JSON.parse(localStorage.getItem('mail'));
 
-  const querySnapshot = await getDocs(collection(db, "usersOrders"));
-  querySnapshot.forEach((doc) => {
-    arrOfOrders.value.push(
-        {
-          id: doc.id,
-          ...doc.data()
-        }
-      )
-  })
-  //console.log(arrOfOrders.value)
+//Пробую пробросить картинку для заказа
+const orderImgs = []
 
-  arrOfOrders.value = arrOfOrders.value.filter((item) => {
-    let temp = userData.value.find((el) => {
-      if (el.id === item.id) {
-        return true
-      }
-    })
-    if (temp) {
-      return true
-    }
-  })
-  console.log(arrOfOrders.value)
+onBeforeMount(() => {
+  getData()
+  getImgs()
 })
+
+async function getData() {
+  //Получаю данные пользователя из колл."usersCartAndFav". nameOfUser.value = userData.value.userName
+  userData.value = (await getDoc(doc(db, "usersCartAndFav", email))).data();
+  //Извлекаю заказы, записанные у пользователя, из общего реестра.
+  //Так как заказы идут в порядке создания, reverse нужен для отображения сверху самого свежего заказа
+  userData.value.Orders.reverse().forEach(async (el) => {
+    let getItem = await getDoc(doc(db, "usersOrders", `${el.id}`))
+    ordersArr.value.push(getItem.data())
+    //Добавляю id дополнительно (конкретно здесь, просто так, на будущее)
+    ordersArr.value[ordersArr.value.length - 1].id = el.id
+
+    ////Жуткий КОСТЫЛЬ в попытки создать картинки
+    ordersArr.value.map(async (item) => {
+      let imgURL = (await getDoc(doc(db, "tovari", `${item.zakaz[0].id}`))).data().imgURL
+      item.imgURL = imgURL
+    })
+  })
+}
+
+function getImgs() {
+  console.log(ordersArr.value)
+  for (let i = 0; i < ordersArr.value.length; i++) {
+    orderImgs.push(ordersArr.value[i])
+  }
+  console.log(orderImgs)
+}
+
+//Работа выхода из аккаунта
+const isLoggedIn = ref(false);
+onMounted(() => {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      isLoggedIn.value = true;
+      //console.log('Юзер залогинен')
+    } else {
+      isLoggedIn.value = false;
+      //console.log('Юзер НЕ! залогинен')
+    }
+  });
+});
+//Функция выхода
+const handleSignOut = () =>{
+  signOut(auth).then(() =>{
+    router.push("/");
+  });
+};
 </script>
 
 <style lang="sass" scoped>

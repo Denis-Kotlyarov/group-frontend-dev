@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" v-if="basketArr.length">
         <!-- Корзина загаловок -->
         <h4 class="q-py-xs q-px-xl">Корзина</h4>
 
@@ -57,8 +57,22 @@
         </q-page>
     </div>
 
+    <div
+        v-else
+        class="basket-pagebasket-empty basket-empty q-mt-xl"
+    >
+        <div class="basket-emptywrap text-center">
+            <q-icon name="shopping_cart" size="6em" color="grey-5" />
+            <div class="basket-content_title text-h6">История заказов пуста</div>
+            <p class="q-pt-md">
+                Загляните на главную, чтобы выбрать товары или найдите нужное в поиске
+            </p>
+            <q-btn to="/" color="positive" label="Перейти на главную" />
+        </div>
+    </div>
+
     <!-- popup уведомление о  покупке товара -->
-    <q-dialog v-model="persistent" persistent transition-show="scale" transition-hide="scale" class="q-mb-md">
+    <q-dialog v-model="showTovarPopup" persistent transition-show="scale" transition-hide="scale" class="q-mb-md">
         <q-card class="bg-positive text-white" style="width: 300px">
             <q-card-section>
                 <div class="text-h6">Спасибо, что выбрали нас!!!</div>
@@ -77,97 +91,84 @@
 
 <script setup>
 import { ref, onBeforeMount } from "vue";
-import { collection, getDoc, getDocs, doc, arrayRemove, updateDoc, arrayUnion, setDoc } from "firebase/firestore";
-import { auth, db } from "src/firebase";
 import { useQuasar } from 'quasar';
+import { getDoc, doc, arrayRemove, updateDoc, arrayUnion, setDoc } from "firebase/firestore";
+import { auth, db } from "src/firebase";
 import { v4 as uuidv4 } from 'uuid';
 
-const total = ref([])
-const basketIds = ref([])
+//Сумма заказа
+const total = ref(0)
+//Инф. user
+const userData = ref([])
+//Массив для товаров в корзине
 const basketArr = ref([])
-const email = auth.currentUser?.email.toString()
+//Догадаетесь...?
+const email = JSON.parse(localStorage.getItem('mail'));
 
 onBeforeMount(() => {
     getData()
 })
 
+//Получения данных
 async function getData() {
-    // const docRef = doc(db, "usersCartAndFav", email);
-    // const docSnap = await getDoc(docRef);
-    basketIds.value = (await getDoc(doc(db, "usersCartAndFav", email))).data("Cart");
-    //console.log(basketIds.value.Cart.find((item) => item = 'N6oXKma7CnSsuAJkHseQ'))
+    //Получаю данные пользователя из колл."usersCartAndFav". Какая же бабуйня ту была с email. Вы бы с@ka знали...
+    userData.value = (await getDoc(doc(db, "usersCartAndFav", `${email}`))).data()
+    //Извлекаю товары, которые есть в списке корзины из общего каталога
+    userData.value.Cart.forEach(async (el) => {
+        let getItem = await getDoc(doc(db, "tovari", `${el.id}`))
+        basketArr.value.push(getItem.data())
+        //Добавляю id дополнительно, для удаление и заказа
+        basketArr.value[basketArr.value.length - 1].id = el.id
 
-    const querySnapshot = await getDocs(collection(db, "tovari"));
-    querySnapshot.forEach((doc) => {
-        basketArr.value.push(
-            {
-                id: doc.id,
-                ...doc.data()
-            }
-        )
+        //!КОСТЫЛЬ
+        total.value += getItem.data().price
     })
-
-    let filtred = ref([])
-
-    //console.log(basketArr.value.find((ellemnt) => ellemnt.id === 'N6oXKma7CnSsuAJkHseQ'))
-    //console.log(basketIds.value.Cart.find((item) => item = 'N6oXKma7CnSsuAJkHseQ'))
-    basketIds.value.Cart.forEach((item) => {
-        let findItem = basketArr.value.find((ellemnt) => ellemnt.id === item.id)
-        //console.log(findItem)
-        if (findItem !== undefined) {
-            //console.log(findItem)
-            filtred.value.push(findItem)
-        }
-    })
-
-    basketArr.value = filtred.value
-
-    total.value = basketArr.value.reduce((accumulator, currentValue) => accumulator + currentValue.price, 0)
-    //console.log(basketArr.value.findIndex((item) => item.id === "N6oXKma7CnSsuAJkHseQ"))
-    //console.log(basketArr.value)
 }
 
+//Для получения экрана
 const $q = useQuasar()
-const persistent = ref(false)
-
+//Popup
+const showTovarPopup = ref(false)
 function checkout() {
-    persistent.value = true;
+    showTovarPopup.value = true;
 }
 
+//Удалить продукт из корзины
 async function removeProduct(item) {
+    console.log(item.id)
     await updateDoc(doc(db, "usersCartAndFav", email), {
         Cart: arrayRemove({
             id: item.id,
         })
     });
-
-    basketArr.value.splice(basketArr.value.findIndex((item) => item.id === "N6oXKma7CnSsuAJkHseQ"), 1)
-
+    //Удалить локально
+    basketArr.value.splice(basketArr.value.findIndex((el) => el.id === item.id), 1)
+    //Пересчитать сумму
+    total.value -= item.price
+    //Уведомление
     $q.notify({
         type: 'negative',
         message: 'Товар удален из корзины!!!'
     })
-
-    total.value = basketArr.value.reduce((accumulator, currentValue) => accumulator + currentValue.price, 0)
-    //console.log(basketArr.value)
 }
 
+//Создание заказа
 async function createOrder() {
     if (basketArr.value.length === 0) return false
-    
+    //Очистка корзины
     await updateDoc(doc(db, "usersCartAndFav", email), {
         Cart: []
     });
-
+    //Задача id заказа
     let docID = uuidv4()
-
+    //Создание заказа
     await setDoc(doc(db, "usersOrders", docID), {
         userEmail: email,
         zakaz: [],
         sum: total.value,
-        zakazTime: new Date(),
+        zakazTime: (new Date()).toLocaleString('ru'),
     });
-
+    //Выгружаем содержимое товара в заказ (id товаров)
     basketArr.value.forEach(async (item) => {
         await updateDoc(doc(db, "usersOrders", docID), {
             zakaz: arrayUnion({
@@ -175,16 +176,16 @@ async function createOrder() {
             })
         })
     })
-
+    //Запись ID заказа у пользователя
     await updateDoc(doc(db, "usersCartAndFav", email), {
         Orders: arrayUnion({
             id: docID
         })
     })
-
+    //Обнуляем корзину и сумму
     basketArr.value = []
     total.value = 0
-    
+    //Уведомляем
     checkout()
 }
 </script>

@@ -131,9 +131,7 @@
 
     <!-- Содержимое layout -->
     <q-page-container :class="$route.fullPath === '/search' ? '' : 'bg-secondary'">
-      <keep-alive>
-        <router-view />
-      </keep-alive>
+      <router-view/>
     </q-page-container>
 
     <!-- Чат -->
@@ -214,7 +212,6 @@
               >
             </p>
           </q-item>
-          <q-btn @click="handleSignOut" v-if="isLoggedIn" to="/">Выйти из аккаунта</q-btn>
         </q-toolbar>
       </div>
     </q-footer>
@@ -302,9 +299,6 @@
     }
   }
 
-
-
-
   function toggleLeftDrawer () {
     leftDrawerOpen.value = !leftDrawerOpen.value
   }
@@ -329,27 +323,6 @@
     console.log(searchArr)
     data.value = Array.from(new Set([...searchArr, ...data.value]));
   })
-  
-  // -------- здесь код для проверки того залогинен юзер или нет
-  const isLoggedIn = ref(false);
-
-  onMounted(() => {
-    onAuthStateChanged(auth, (user) => {
-    if (user) {
-      isLoggedIn.value = true;
-      console.log('MainLayout говорит - Юзер залогинен')
-    } else {
-      isLoggedIn.value = false;
-      console.log('MainLayout говорит - Юзер НЕ! залогинен')
-    }
-    });
-  });
-
-  const handleSignOut = () =>{
-    signOut(auth).then(() =>{
-    // router.push("/");
-    });
-  };
 </script>
 
 <style scoped lang="scss">

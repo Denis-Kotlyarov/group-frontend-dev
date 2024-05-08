@@ -27,7 +27,7 @@
     </q-card-section>
 
     <q-card-section class="full-width">
-      <q-btn no-caps class="text-bold full-width" color="primary" label="В корзину" style="border-radius: 10px;" @click.stop="addToCart"/>
+      <q-btn :disable="isLoggedIn === null" no-caps class="text-bold full-width" color="primary" label="В корзину" style="border-radius: 10px;" @click.stop="addToCart"/>
     </q-card-section>
   </q-card>
 
@@ -110,12 +110,15 @@
   const props = defineProps({
     tovar: {
       type: Object
+    },
+    favoriteToggler: {
+      type: Boolean
     }
   })
 
   const $q = useQuasar();
   // Избранное
-  let favoriteToggler = ref(false)
+  let favoriteToggler = ref(props.favoriteToggler)
   // Открытие popup
   let showMoreInfo = ref(false);
 
