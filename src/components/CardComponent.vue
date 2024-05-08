@@ -110,12 +110,15 @@
   const props = defineProps({
     tovar: {
       type: Object
+    },
+    favoriteToggler: {
+      type: Boolean
     }
   })
 
   const $q = useQuasar();
   // Избранное
-  let favoriteToggler = ref(false)
+  let favoriteToggler = ref(props.favoriteToggler)
   // Открытие popup
   let showMoreInfo = ref(false);
 

@@ -2,68 +2,41 @@
   <div class="container">
     <div class="comm1 landing-block q-pa-lg q-my-lg">
       <div class="comm1-item">
-        <img
-          class="round-15 img-100 col-6 col-md-4"
-          src="../assets/testcommS-1.webp"
-          alt="comm"
-          style="max-width: 402px; flex-basis: 402px"
-        />
+        <img class="round-15 img-100 col-6 col-md-4" src="../assets/testcommS-1.webp" alt="comm"
+          style="max-width: 402px; flex-basis: 402px" />
       </div>
       <div class="comm1-item">
         <div class="flex flex-center q-gutter-x-md q-gutter-y-md q-mt-md">
-          <card-component
-            v-for="tovar in datalimit2"
-            :key="tovar.id"
-            :tovar="tovar"
-          />
+          <card-component v-for="tovar in datalimit2" :key="tovar.id" :tovar="tovar" :favoriteToggler="checkFav(tovar)"/>
         </div>
       </div>
       <div class="comm1-item">
-        <img
-          class="round-15 img-100 col-6 col-md-4"
-          src="../assets/testcommS-2.webp"
-          alt="comm"
-          style="max-width: 402px; flex-basis: 402px"
-        />
+        <img class="round-15 img-100 col-6 col-md-4" src="../assets/testcommS-2.webp" alt="comm"
+          style="max-width: 402px; flex-basis: 402px" />
       </div>
     </div>
-    <div
-      class="flex flex-center landing-block q-my-lg bg-gr1"
-      style="
+    <div class="flex flex-center landing-block q-my-lg bg-gr1" style="
         display: flex;
         justify-content: center;
         align-items: center;
         min-height: 140px;
-      "
-    >
-      <q-btn
-        @click="popUpRegistration = true"
-        v-if="!isLoggedIn"
-        class="text-h6"
-        label="зайдите в аккаунт"
-        style="
+      ">
+      <q-btn @click="popUpRegistration = true" v-if="!isLoggedIn" class="text-h6" label="зайдите в аккаунт" style="
           border-radius: 10px;
           max-width: 40%;
           min-width: 30%;
           min-height: 50px;
           color: black;
           background-color: white;
-        "
-      />
-      <q-btn
-        to="/favpage"
-        v-if="isLoggedIn"
-        class="text-h6"
-        label="ваше избранное"
-        style="
+        " />
+      <q-btn to="/favpage" v-if="isLoggedIn" class="text-h6" label="ваше избранное" style="
           border-radius: 10px;
           max-width: 40%;
           min-width: 30%;
           min-height: 50px;
           color: black;
           background-color: white;
-        "
-      />
+        " />
     </div>
 
     <div class="flex-center landing-block q-pa-lg q-my-lg">
@@ -72,40 +45,28 @@
       </div>
       <div class="flex flex-center q-gutter-x-md q-gutter-y-md q-mt-md">
         <!-- див с товарами -->
-        <card-component
-          v-for="tovar in data"
-          :key="tovar.id"
-          :tovar="tovar"
-        />
+        <card-component v-for="tovar in data" :key="tovar.id" :tovar="tovar" :favoriteToggler="checkFav(tovar)"/>
       </div>
     </div>
 
-    <div
-      class="flex flex-center landing-block q-my-lg bg-gr1"
-      style="
+    <div class="flex flex-center landing-block q-my-lg bg-gr1" style="
         display: flex;
         justify-content: center;
         align-items: center;
         min-height: 140px;
-      "
-    >
-      <q-btn
-        class="text-h6"
-        label="Найти товары"
-        to="/search"
-        style="
+      ">
+      <q-btn class="text-h6" label="Найти товары" to="/search" style="
           border-radius: 10px;
           max-width: 40%;
           min-width: 30%;
           min-height: 50px;
           color: black;
           background-color: white;
-        "
-      />
+        "/>
     </div>
-    <q-dialog v-model="popUpRegistration"><PopApAuth/></q-dialog>
-    
-
+    <q-dialog v-model="popUpRegistration">
+      <PopApAuth />
+    </q-dialog>
   </div>
 </template>
 
@@ -124,6 +85,7 @@ import {
   orderBy,
   limit,
   getDocs,
+  getDoc
 } from "firebase/firestore";
 import { db, auth } from "src/firebase";
 // import Register from "src/components/Register.vue";
@@ -163,8 +125,13 @@ const tovariCollectionRef = collection(db, "tovari");
 
 const data = ref([])
 const datalimit2 = ref([])
+const userData = ref([])
+const email = JSON.parse(localStorage.getItem('mail'));
 
-onMounted( async () => {
+onMounted(async () => {
+  userData.value = (await getDoc(doc(db, "usersCartAndFav", email))).data();
+  //console.log(userData.value.Fav)
+
   const querySnapshot = await getDocs(query(collection(db, "tovari")));
   querySnapshot.forEach((doc) => {
     data.value.push(
@@ -186,7 +153,22 @@ onMounted( async () => {
   })
 })
 
-// //Генератор рандомных товаров @click="addTodo"---
+function checkFav(tovar) {
+  const res = userData.value.Fav.reduce((acc, item) => {
+    if (item.id === tovar.id) {
+      return acc += 1
+    }
+    return acc
+  }, 0)
+  
+  if (res > 0) {
+    return true
+  } else {
+    return false
+  }
+}
+
+// //Генератор рандомных товаров @click="addTodo"
 // import { onMounted } from "vue";
 //
 //
@@ -211,12 +193,12 @@ onMounted( async () => {
 //     });
 // };
 
-  // -------- здесь код для проверки того залогинен юзер или нет
-  const isLoggedIn = ref(false);
-  const popUpRegistration = ref(false);
+// -------- здесь код для проверки того залогинен юзер или нет
+const isLoggedIn = ref(false);
+const popUpRegistration = ref(false);
 
-  onMounted(() => {
-    onAuthStateChanged(auth, (user) => {
+onMounted(() => {
+  onAuthStateChanged(auth, (user) => {
     if (user) {
       isLoggedIn.value = true;
       popUpRegistration.value = false; //НЕ УДАЛЯТЬ, эта штука ЗАКРЫВАЕТ ПОПАП РЕГИСТРАЦИИ КОРРЕКТНО(исходя из UX) без +100 строк кода с эмитами и тд
@@ -225,8 +207,8 @@ onMounted( async () => {
       isLoggedIn.value = false;
       console.log('LandingPage говорит - Юзер НЕ! залогинен')
     }
-    });
   });
+});
 
 </script>
 
@@ -237,7 +219,8 @@ onMounted( async () => {
 .q-field--standout.q-field--highlighted .q-field__prepend,
 .q-field--standout.q-field--highlighted .q-field__append,
 .q-field--standout.q-field--highlighted .q-field__input {
-  color: inherit; /*inherit для наследования цвета текста */
+  color: inherit;
+  /*inherit для наследования цвета текста */
 }
 
 .landing-block {
@@ -245,13 +228,16 @@ onMounted( async () => {
   border-radius: 15px;
   width: 100%;
 }
+
 .round-15 {
   border-radius: 15px;
 }
+
 .img-100 {
   width: 100%;
   align-self: center;
 }
+
 .comm1 {
   box-sizing: border-box;
   display: flex;
@@ -262,6 +248,7 @@ onMounted( async () => {
   max-width: calc(100% + var(--gap));
   width: calc(100% + var(--gap));
 }
+
 .comm1-item {
   align-items: stretch;
   box-sizing: border-box;
@@ -272,6 +259,7 @@ onMounted( async () => {
   margin-left: var(--gap);
   min-width: 0;
 }
+
 .bg-gr1 {
   background: linear-gradient(to left, $primary, $accent);
 }

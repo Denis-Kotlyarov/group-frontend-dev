@@ -1,12 +1,15 @@
 <template>
     <div class="container">
-        <div class="flex flex-center q-gutter-x-md q-gutter-y-md q-mt-md">
+        <h4>Избранное</h4>
+        <div v-if="favArr.length" class="flex flex-center q-gutter-x-md q-gutter-y-md q-mt-md">
             <card-component
-                v-for="tovar in data"
+                v-for="tovar in favArr"
                 :key="tovar.id"
                 :tovar="tovar"
+                :favoriteToggler = "true"
             />
         </div>
+        <p v-else>Похоже ничего нет...</p>
     </div>
 </template>
 
@@ -25,81 +28,33 @@ import {
   orderBy,
   limit,
   getDocs,
+  getDoc
 } from "firebase/firestore";
 import { db } from "src/firebase";
 
-/**
- * firebase ref
- */
+/*** firebase ref */
 const tovariCollectionRef = collection(db, "tovari");
-// const tovariCollectionQuery = query(todosCollectionRef, orderBy("date")); // сортировка-референс
 
-// const tovari = ref([]);
+const favArr = ref([])
+const userData = ref([])
+const email = JSON.parse(localStorage.getItem('mail'))
 
-// onMounted(() => {
-//   onSnapshot(tovariCollectionRef, (querySnapshot) => {
-//     const fbTovari = [];
-//     querySnapshot.forEach((doc) => {
-//       const tovar = {
-//         id: doc.id,
-//         type: doc.data().type,
-//         name: doc.data().name,
-//         seller: doc.data().seller,
-//         description: doc.data().description,
-//         price: doc.data().price,
-//         popularity: doc.data().popularity,
-//         imgURL: doc.data().imgURL,
-//         isFav: doc.data().isFav,
-//       };
-//       fbTovari.push(tovar);
-//       console.log(tovar)
-//     });
-//     tovari.value = fbTovari;
-//   });
-// });
+onSnapshot(doc(db, "usersCartAndFav", email), (doc) => {
+    favArr.value = []
+    getData()
+});
 
-const data = ref([])
-
-    onMounted( async () => {
-        const querySnapshot = await getDocs(collection(db, "tovari"));
-        querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            data.value.push(
-                {
-                    id: doc.id,
-                    ...doc.data()
-                }
-            )
-        });
-        console.log(data);
+async function getData() {
+    userData.value = (await getDoc(doc(db, "usersCartAndFav", email))).data();
+    
+    //Извлекаю товары, которые есть в списке избранного из общего каталога
+    userData.value.Fav.forEach(async (el) => {
+        let getItem = await getDoc(doc(db, "tovari", `${el.id}`))
+        favArr.value.push(getItem.data())
+        //Добавляю id дополнительно
+        favArr.value[favArr.value.length - 1].id = el.id
     })
-
-
-
-// //Генератор рандомных товаров @click="addTodo"
-// import { onMounted } from "vue";
-//
-//
-
-// function getRandomInt(max) {
-//   return Math.floor(Math.random() * max);
-// }
-
-// const todosCollectionRef = collection(db, "tovari");
-
-//   const addTodo = () => {
-//     addDoc(todosCollectionRef,
-//     {
-//         type: 'mobile',
-//         name: 'Мобильник дубликат',
-//         seller: 'Продавец дубликат',
-//         description: 'Описание дубликат',
-//         price: getRandomInt(3000000),
-//         popularity: getRandomInt(300),
-//         imgURL: '',
-//         isFav: false,
-//     });
-// };
+}
 </script>
 
 <style>
