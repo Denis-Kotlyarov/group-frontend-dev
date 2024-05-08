@@ -17,7 +17,10 @@
     }
 
     localStorage.setItem('isLoggedIn', JSON.stringify(isLoggedIn.value))
-    localStorage.setItem('mail', JSON.stringify(auth.currentUser?.email.toString()))
+
+    if (auth.currentUser?.email.toString() !== undefined) {
+      localStorage.setItem('mail', JSON.stringify(auth.currentUser?.email.toString()))
+    }
   });
 </script>
 
